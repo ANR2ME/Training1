@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3A667DF5-7A97-4C53-ADD9-2B285FF5E9F4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Core</RootNamespace>
+    <AssemblyName>Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Constants\Constant.cs" />
+    <Compile Include="DomainModel\DeliveryOrder.cs" />
+    <Compile Include="DomainModel\DeliveryOrderDetail.cs" />
+    <Compile Include="DomainModel\Item.cs" />
+    <Compile Include="DomainModel\PurchaseOrder.cs" />
+    <Compile Include="DomainModel\PurchaseOrderDetail.cs" />
+    <Compile Include="DomainModel\PurchaseReceival.cs" />
+    <Compile Include="DomainModel\PurchaseReceivalDetail.cs" />
+    <Compile Include="DomainModel\SalesOrder.cs" />
+    <Compile Include="DomainModel\SalesOrderDetail.cs" />
+    <Compile Include="DomainModel\StockAdjustment.cs" />
+    <Compile Include="DomainModel\StockAdjustmentDetail.cs" />
+    <Compile Include="DomainModel\StockMutation.cs" />
+    <Compile Include="Interface\Repository\IDeliveryOrderDetailRepository.cs" />
+    <Compile Include="Interface\Repository\IDeliveryOrderRepository.cs" />
+    <Compile Include="Interface\Repository\IItemRepository.cs" />
+    <Compile Include="Interface\Repository\IPurchaseOrderDetailRepository.cs" />
+    <Compile Include="Interface\Repository\IPurchaseOrderRepository.cs" />
+    <Compile Include="Interface\Repository\IPurchaseReceivalDetailRepository.cs" />
+    <Compile Include="Interface\Repository\IPurchaseReceivalRepository.cs" />
+    <Compile Include="Interface\Repository\IRepository.cs" />
+    <Compile Include="Interface\Repository\ISalesOrderDetailRepository.cs" />
+    <Compile Include="Interface\Repository\ISalesOrderRepository.cs" />
+    <Compile Include="Interface\Repository\IStockAdjustmentDetailRepository.cs" />
+    <Compile Include="Interface\Repository\IStockAdjustmentRepository.cs" />
+    <Compile Include="Interface\Repository\IStockMutationRepository.cs" />
+    <Compile Include="Interface\Service\IDeliveryOrderDetailService.cs" />
+    <Compile Include="Interface\Service\IDeliveryOrderService.cs" />
+    <Compile Include="Interface\Service\IItemService.cs" />
+    <Compile Include="Interface\Service\IPurchaseOrderDetailService.cs" />
+    <Compile Include="Interface\Service\IPurchaseOrderService.cs" />
+    <Compile Include="Interface\Service\IPurchaseReceivalDetailService.cs" />
+    <Compile Include="Interface\Service\IPurchaseReceivalService.cs" />
+    <Compile Include="Interface\Service\ISalesOrderDetailService.cs" />
+    <Compile Include="Interface\Service\ISalesOrderService.cs" />
+    <Compile Include="Interface\Service\IStockAdjustmentDetailService.cs" />
+    <Compile Include="Interface\Service\IStockAdjustmentService.cs" />
+    <Compile Include="Interface\Service\IStockMutationService.cs" />
+    <Compile Include="Interface\Validation\IDeliveryOrderDetailValidator.cs" />
+    <Compile Include="Interface\Validation\IDeliveryOrderValidator.cs" />
+    <Compile Include="Interface\Validation\IItemValidator.cs" />
+    <Compile Include="Interface\Validation\IPurchaseOrderDetailValidator.cs" />
+    <Compile Include="Interface\Validation\IPurchaseOrderValidator.cs" />
+    <Compile Include="Interface\Validation\IPurchaseReceivalDetailValidator.cs" />
+    <Compile Include="Interface\Validation\IPurchaseReceivalValidator.cs" />
+    <Compile Include="Interface\Validation\ISalesOrderDetailValidator.cs" />
+    <Compile Include="Interface\Validation\ISalesOrderValidator.cs" />
+    <Compile Include="Interface\Validation\IStockAdjustmentDetailValidator.cs" />
+    <Compile Include="Interface\Validation\IStockAdjustmentValidator.cs" />
+    <Compile Include="Interface\Validation\IStockMutationValidator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
