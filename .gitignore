@@ -44,3 +44,14 @@ packages/EntityFramework.6.1.1/tools/about_EntityFramework.help.txt
 packages/EntityFramework.6.1.1/tools/init.ps1
 packages/EntityFramework.6.1.1/tools/install.ps1
 packages/repositories.config
+TestValidation/bin/Debug/EntityFramework.SqlServer.xml
+TestValidation/bin/Debug/EntityFramework.xml
+TestValidation/bin/Debug/TestValidation.dll.config
+TestValidation/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+TestValidation/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
+TestValidation/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+TestValidation/obj/Debug/TestValidation.csproj.FileListAbsolute.txt
+packages/nspec.0.9.68/content/DebuggerShim.cs
+packages/nspec.0.9.68/nspec.0.9.68.nupkg
+packages/nspec.0.9.68/tools/NSpecRunner.exe.config
+packages/nspec.0.9.68/tools/nunit.framework.xml
