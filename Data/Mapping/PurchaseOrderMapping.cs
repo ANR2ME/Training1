@@ -15,7 +15,8 @@ namespace Data.Mapping
             HasKey(po => po.Id);
             HasMany(po => po.PurchaseOrderDetails)
                 .WithRequired(pod => pod.PurchaseOrder)
-                .HasForeignKey(pod => pod.PurchaseOrderId);
+                .HasForeignKey(pod => pod.PurchaseOrderId)
+                .WillCascadeOnDelete(false);
             HasRequired(x => x.Contact)
                 .WithMany(y => y.PurchaseOrders)
                 .HasForeignKey(x => x.ContactId);
