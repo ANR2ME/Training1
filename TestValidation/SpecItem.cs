@@ -138,6 +138,7 @@ namespace TestValidation
                     PendingReceival = 0
                 };
                 sameskuitem = _itemService.CreateObject(sameskuitem);
+                if (sameskuitem.Errors.Count() > 0) Console.WriteLine("sameskuitem.Error:{0}", sameskuitem.Errors.FirstOrDefault());
                 sameskuitem.Errors.Count().should_be(0);
 
                 sameskuitem.Sku = "B001";
@@ -165,7 +166,7 @@ namespace TestValidation
                     SourceDocumentDetailType = "StockAdjustmentDetail"
                 };
                 sm = _stockMutationService.CreateObject(sm);
-                if (sm.Errors.Count() > 0) Console.WriteLine("Error:{0}", sm.Errors.FirstOrDefault());
+                if (sm.Errors.Count() > 0) Console.WriteLine("sm.Error:{0}", sm.Errors.FirstOrDefault());
                 sm.Errors.Count().should_be(0); 
 
                 item = _itemService.SoftDeleteObject(item, _stockMutationService);
