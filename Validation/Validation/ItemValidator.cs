@@ -12,11 +12,20 @@ namespace Validation.Validation
 {
     public class ItemValidator : IItemValidator
     {
+        public Item VHasSku(Item item)
+        {
+            if (item.Sku == "")
+            {
+                item.Errors.Add("SKU", "Tidak boleh kosong");
+            }
+            return item;
+        }
+
         public Item VHasUniqueSku(Item item, IItemService _itemService)
         {
             if (_itemService.IsSkuDuplicated(item))
             {
-                item.Errors.Add("Sku", "Tidak boleh diduplikasi");
+                item.Errors.Add("SKU", "Tidak boleh diduplikasi");
             }
             return item;
         }
@@ -42,6 +51,7 @@ namespace Validation.Validation
 
         public Item VCreateObject(Item item, IItemService _itemService)
         {
+            VHasSku(item);
             VHasUniqueSku(item, _itemService);
             VHasDescription(item);
             return item;
@@ -49,6 +59,7 @@ namespace Validation.Validation
 
         public Item VUpdateObject(Item item, IItemService _itemService)
         {
+            VHasSku(item);
             VHasUniqueSku(item, _itemService);
             VHasDescription(item);
             return item;

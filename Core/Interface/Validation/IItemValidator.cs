@@ -10,6 +10,7 @@ namespace Core.Interface.Validation
 {
     public interface IItemValidator
     {
+        Item VHasSku(Item item);
         Item VHasUniqueSku(Item item, IItemService _itemService);
         Item VHasDescription(Item item);
         Item VHasStockMutation(Item item, IStockMutationService _stockMutationService);
