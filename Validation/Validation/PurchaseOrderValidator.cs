@@ -67,26 +67,6 @@ namespace Validation.Validation
             return purchaseOrder;
         }
 
-        /*public PurchaseOrder VIsValidPurchaseOrderDetailsQuantity(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IItemService _itemService)
-        {
-            IList<PurchaseOrderDetail> purchaseOrderDetails = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
-            bool valid = true;
-            foreach (var sad in purchaseOrderDetails)
-            {
-                Item item = _itemService.GetObjectById(sad.ItemId);
-                if (sad.Quantity + item.Quantity < 0)
-                {
-                    valid = false;
-                    break;
-                }
-            }
-            if (!valid)
-            {
-                purchaseOrder.Errors.Add("PurchaseOrderDetails Quantity + Item Quantity", "Harus lebih besar atau sama dengan 0");
-            }
-            return purchaseOrder;
-        }*/
-
         public PurchaseOrder VCreateObject(PurchaseOrder purchaseOrder)
         {
             VHasContact(purchaseOrder);
@@ -112,7 +92,6 @@ namespace Validation.Validation
         public PurchaseOrder VConfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IItemService _itemService)
         {
             VHasPurchaseOrderDetails(purchaseOrder, _purchaseOrderDetailService);
-            //VIsNotConfirmed(purchaseOrder);
             return purchaseOrder;
         }
 

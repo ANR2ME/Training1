@@ -47,16 +47,6 @@ namespace Validation.Validation
             return purchaseOrderDetail;
         }
 
-        /*public PurchaseOrderDetail VIsConfirmQuantityValid(PurchaseOrderDetail purchaseOrderDetail, IItemService _itemService)
-        {
-            Item item = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
-            if (purchaseOrderDetail.Quantity + item.Quantity < 0)
-            {
-                purchaseOrderDetail.Errors.Add("Quantity + Item Quantity", "Harus lebih besar atau sama dengan 0");
-            }
-            return purchaseOrderDetail;
-        }*/
-
         public PurchaseOrderDetail VIsUnconfirmQuantityValid(PurchaseOrderDetail purchaseOrderDetail, IItemService _itemService)
         {
             Item item = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
@@ -132,7 +122,7 @@ namespace Validation.Validation
         {
             VIsUnconfirmQuantityValid(purchaseOrderDetail, _itemService);
             VDontHavePurchaseReceivalDetails(purchaseOrderDetail, _purchaseReceivalDetailService);
-            //VIsNotConfirmed(purchaseOrderDetail);
+            //VIsConfirmed(purchaseOrderDetail);
             return purchaseOrderDetail;
         }
 

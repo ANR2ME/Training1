@@ -75,16 +75,6 @@ namespace Validation.Validation
             return deliveryOrderDetail;
         }
 
-        /*public DeliveryOrderDetail VIsUnconfirmQuantityValid(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService)
-        {
-            Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
-            if (item.PendingDelivery < deliveryOrderDetail.Quantity)
-            {
-                deliveryOrderDetail.Errors.Add("Item PendingDelivery", "Harus lebih besar atau sama dengan Quantity");
-            }
-            return deliveryOrderDetail;
-        }*/
-
         public DeliveryOrderDetail VIsItemUnique(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService)
         {
             IList<DeliveryOrderDetail> deliveryOrderDetails = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrderDetail.DeliveryOrderId);

@@ -77,30 +77,10 @@ namespace Validation.Validation
             return purchaseReceival;
         }
 
-        /*public PurchaseReceival VIsValidPurchaseReceivalDetailsQuantity(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
-        {
-            IList<PurchaseReceivalDetail> purchaseReceivalDetails = _purchaseReceivalDetailService.GetObjectsByPurchaseReceivalId(purchaseReceival.Id);
-            bool valid = true;
-            foreach (var sad in purchaseReceivalDetails)
-            {
-                Item item = _itemService.GetObjectById(sad.ItemId);
-                if (sad.Quantity + item.Quantity < 0)
-                {
-                    valid = false;
-                    break;
-                }
-            }
-            if (!valid)
-            {
-                purchaseReceival.Errors.Add("PurchaseReceivalDetails Quantity + Item Quantity", "Harus lebih besar atau sama dengan 0");
-            }
-            return purchaseReceival;
-        }*/
-
         public PurchaseReceival VCreateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService)
         {
             VHasPurchaseOrder(purchaseReceival);
-            //VHasContact(purchaseReceival, _purchaseOrderService);
+            VHasContact(purchaseReceival, _purchaseOrderService);
             VIsValidReceivalDate(purchaseReceival);
             return purchaseReceival;
         }

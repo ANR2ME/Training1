@@ -65,16 +65,6 @@ namespace Validation.Validation
             return purchaseReceivalDetail;
         }
 
-        /*public PurchaseReceivalDetail VIsConfirmQuantityValid(PurchaseReceivalDetail purchaseReceivalDetail, IItemService _itemService)
-        {
-            Item item = _itemService.GetObjectById(purchaseReceivalDetail.ItemId);
-            if (purchaseReceivalDetail.Quantity + item.Quantity < 0)
-            {
-                purchaseReceivalDetail.Errors.Add("Quantity + Item Quantity", "Harus lebih besar atau sama dengan 0");
-            }
-            return purchaseReceivalDetail;
-        }*/
-
         public PurchaseReceivalDetail VIsUnconfirmQuantityValid(PurchaseReceivalDetail purchaseReceivalDetail, IItemService _itemService)
         {
             Item item = _itemService.GetObjectById(purchaseReceivalDetail.ItemId);
