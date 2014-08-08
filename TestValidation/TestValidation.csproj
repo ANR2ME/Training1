@@ -54,6 +54,7 @@
     <Compile Include="SpecItem.cs" />
     <Compile Include="DebuggerShim.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpecSalesOrder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

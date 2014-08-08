@@ -19,6 +19,36 @@ namespace StockControl
             var db = new StockControlEntities();
             using (db)
             {
+                /*SalesOrder salesOrder;
+                Contact contact;
+                IItemService _itemService;
+                IStockMutationService _stockMutationService;
+                ISalesOrderDetailService _salesOrderDetailService;
+                ISalesOrderService _salesOrderService;
+                IContactService _contactService;
+
+                db.DeleteAllTables();
+                _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+                _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
+                _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
+                _salesOrderService = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
+                _contactService = new ContactService(new ContactRepository(), new ContactValidator());
+
+                contact = new Contact()
+                {
+                    Address = "Test",
+                    PhoneNumber = "Test",
+                    Name = "Name"
+                };
+                contact = _contactService.CreateObject(contact);
+
+                salesOrder = new SalesOrder()
+                {
+                    ContactId = contact.Id,
+                    SalesDate = DateTime.Now
+                };
+                salesOrder = _salesOrderService.CreateObject(salesOrder);*/
+                
                 IItemService iis = new ItemService(new ItemRepository(), new ItemValidator());
                 Item item = new Item()
                 {

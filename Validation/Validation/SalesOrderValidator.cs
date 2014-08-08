@@ -13,6 +13,7 @@ namespace Validation.Validation
     {
         public SalesOrder VHasContact(SalesOrder salesOrder)
         {
+            //TODO: try to get the object
             if (salesOrder.ContactId <= 0)
             {
                 salesOrder.Errors.Add("Contact", "Harus ada");
