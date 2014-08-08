@@ -17,7 +17,7 @@ namespace Core.Interface.Validation
         DeliveryOrderDetail VIsConfirmed(DeliveryOrderDetail deliveryOrderDetail);
         DeliveryOrderDetail VIsPositiveQuantity(DeliveryOrderDetail deliveryOrderDetail);
         DeliveryOrderDetail VIsQuantityValid(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService);
-        DeliveryOrderDetail VIsUnconfirmQuantityValid(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService);
+        //DeliveryOrderDetail VIsUnconfirmQuantityValid(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService);
         DeliveryOrderDetail VIsItemUnique(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService);
         DeliveryOrderDetail VIsValidOrderQuantity(DeliveryOrderDetail deliveryOrderDetail, ISalesOrderDetailService _salesOrderDetailService);
         DeliveryOrderDetail VIsOrderDetailConfirmed(DeliveryOrderDetail deliveryOrderDetail, ISalesOrderDetailService _salesOrderDetailService);

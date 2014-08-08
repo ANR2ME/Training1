@@ -19,7 +19,7 @@ namespace Data.Context
 
         public void DeleteAllTables()
         {
-            IList<String> tableNames = new List<String>() { "Item", "StockMutation", "StockAdjustment", "StockAdjustmentDetail", "PurchaseOrder", "PurchaseOrderDetail", "PurchaseReceival", "PurchaseReceivalDetail", "SalesOrder", "SalesOrderDetail", "DeliveryOrder", "DeliveryOrderDetail" };
+            IList<String> tableNames = new List<String>() { "Item", "Contact", "StockMutation", "StockAdjustment", "StockAdjustmentDetail", "PurchaseOrder", "PurchaseOrderDetail", "PurchaseReceival", "PurchaseReceivalDetail", "SalesOrder", "SalesOrderDetail", "DeliveryOrder", "DeliveryOrderDetail" };
 
             foreach (var tableName in tableNames)
             {
@@ -32,6 +32,7 @@ namespace Data.Context
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
             modelBuilder.Configurations.Add(new ItemMapping());
+            modelBuilder.Configurations.Add(new ContactMapping());
             modelBuilder.Configurations.Add(new StockMutationMapping());
             modelBuilder.Configurations.Add(new StockAdjustmentMapping());
             modelBuilder.Configurations.Add(new StockAdjustmenDetailMapping());
@@ -48,6 +49,7 @@ namespace Data.Context
         }
 
         public DbSet<Item> Items { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
         public DbSet<StockMutation> StockMutations { get; set; }
         public DbSet<StockAdjustment> StockAdjustments { get; set; }
         public DbSet<StockAdjustmentDetail> StockAdjustmentDetails { get; set; }

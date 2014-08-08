@@ -35,15 +35,15 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public DeliveryOrder CreateObject(DeliveryOrder deliveryOrder)
+        public DeliveryOrder CreateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService)
         {
             deliveryOrder.Errors = new Dictionary<String, String>();
-            return (deliveryOrder = _validator.ValidCreateObject(deliveryOrder) ? _repository.CreateObject(deliveryOrder) : deliveryOrder);
+            return (deliveryOrder = _validator.ValidCreateObject(deliveryOrder, _salesOrderService) ? _repository.CreateObject(deliveryOrder) : deliveryOrder);
         }
 
-        public DeliveryOrder UpdateObject(DeliveryOrder deliveryOrder)
+        public DeliveryOrder UpdateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService)
         {
-            return (deliveryOrder = _validator.ValidUpdateObject(deliveryOrder) ? _repository.UpdateObject(deliveryOrder) : deliveryOrder);
+            return (deliveryOrder = _validator.ValidUpdateObject(deliveryOrder, _salesOrderService) ? _repository.UpdateObject(deliveryOrder) : deliveryOrder);
         }
 
         public DeliveryOrder ConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, IStockMutationService _stockMutationService, IItemService _itemService, ISalesOrderDetailService _salesOrderDetailService)

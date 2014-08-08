@@ -11,11 +11,11 @@ namespace Validation.Validation
 {
     public class SalesOrderValidator : ISalesOrderValidator
     {
-        public SalesOrder VHasCustomer(SalesOrder salesOrder)
+        public SalesOrder VHasContact(SalesOrder salesOrder)
         {
-            if (salesOrder.CustomerId <= 0)
+            if (salesOrder.ContactId <= 0)
             {
-                salesOrder.Errors.Add("Customer", "Harus ada");
+                salesOrder.Errors.Add("Contact", "Harus ada");
             }
             return salesOrder;
         }
@@ -89,14 +89,14 @@ namespace Validation.Validation
 
         public SalesOrder VCreateObject(SalesOrder salesOrder)
         {
-            VHasCustomer(salesOrder);
+            VHasContact(salesOrder);
             VIsValidSalesDate(salesOrder);
             return salesOrder;
         }
 
         public SalesOrder VUpdateObject(SalesOrder salesOrder)
         {
-            VHasCustomer(salesOrder);
+            VHasContact(salesOrder);
             VIsValidSalesDate(salesOrder);
             VIsNotConfirmed(salesOrder);
             return salesOrder;

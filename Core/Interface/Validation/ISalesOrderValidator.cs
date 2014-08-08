@@ -10,7 +10,7 @@ namespace Core.Interface.Validation
 {
     public interface ISalesOrderValidator
     {
-        SalesOrder VHasCustomer(SalesOrder salesOrder);
+        SalesOrder VHasContact(SalesOrder salesOrder);
         SalesOrder VIsValidSalesDate(SalesOrder salesOrder);
         SalesOrder VIsConfirmed(SalesOrder salesOrder);
         SalesOrder VIsNotConfirmed(SalesOrder salesOrder);

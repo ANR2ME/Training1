@@ -9,7 +9,7 @@ namespace Core.DomainModel
     public partial class PurchaseReceival
     {
         public int Id { get; set; }
-        public int CustomerId { get; set; }
+        public int PurchaseOrderId { get; set; }
         public string Code { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsConfirmed { get; set; }
@@ -21,7 +21,7 @@ namespace Core.DomainModel
 
         public Dictionary<string, string> Errors { get; set; }
 
-        //public virtual Customer Customer { get; set; }
+        public virtual PurchaseOrder PurchaseOrder { get; set; }
         public virtual ICollection<PurchaseReceivalDetail> PurchaseReceivalDetails { get; set; }
     }
 }

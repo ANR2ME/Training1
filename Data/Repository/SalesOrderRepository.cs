@@ -23,6 +23,11 @@ namespace Data.Repository
             return FindAll().ToList();
         }
 
+        public IList<SalesOrder> GetObjectsByContactId(int ContactId)
+        {
+            return FindAll(x => x.ContactId == ContactId && !x.IsDeleted).ToList();
+        }
+
         public SalesOrder GetObjectById(int Id)
         {
             SalesOrder po = Find(x => x.Id == Id && !x.IsDeleted);

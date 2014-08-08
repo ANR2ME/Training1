@@ -12,7 +12,7 @@ namespace Core.Interface.Service
     {
         IPurchaseOrderValidator GetValidator();
         IList<PurchaseOrder> GetAll();
-
+        IList<PurchaseOrder> GetObjectsByContactId(int ContactId);
         PurchaseOrder GetObjectById(int Id);
         PurchaseOrder CreateObject(PurchaseOrder purchaseOrder);
         PurchaseOrder UpdateObject(PurchaseOrder purchaseOrder);

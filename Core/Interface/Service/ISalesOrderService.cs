@@ -12,7 +12,7 @@ namespace Core.Interface.Service
     {
         ISalesOrderValidator GetValidator();
         IList<SalesOrder> GetAll();
-
+        IList<SalesOrder> GetObjectsByContactId(int ContactId);
         SalesOrder GetObjectById(int Id);
         SalesOrder CreateObject(SalesOrder salesOrder);
         SalesOrder UpdateObject(SalesOrder salesOrder);

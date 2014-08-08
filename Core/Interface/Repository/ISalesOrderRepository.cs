@@ -11,6 +11,7 @@ namespace Core.Interface.Repository
     public interface ISalesOrderRepository : IRepository<SalesOrder>
     {
         IList<SalesOrder> GetAll();
+        IList<SalesOrder> GetObjectsByContactId(int ContactId);
         SalesOrder GetObjectById(int Id);
         SalesOrder CreateObject(SalesOrder salesOrder);
         SalesOrder UpdateObject(SalesOrder salesOrder);

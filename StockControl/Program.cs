@@ -30,7 +30,17 @@ namespace StockControl
                 };
                 iis.CreateObject(item);
                 Console.WriteLine("Item Id:{0}, Sku:{1}, Desc:{2}, Ready:{3}, PD:{4}, PR:{5}, Error:{6}", item.Id, item.Sku, item.Description, item.Quantity, item.PendingDelivery, item.PendingReceival, item.Errors.FirstOrDefault());
-                
+
+                IContactService ics = new ContactService(new ContactRepository(), new ContactValidator());
+                Contact contact = new Contact()
+                {
+                    Name = "Alfa Beta",
+                    Address = "Jl.Panjang No.10",
+                    PhoneNumber = "021-555-1234"
+                };
+                ics.CreateObject(contact);
+                Console.WriteLine("Contact Id:{0}, Name:{1}, Address:{2}, PhoneNumber:{3}, Error:{4}", contact.Id, contact.Name, contact.Address, contact.PhoneNumber, contact.Errors.FirstOrDefault());
+
                 IStockAdjustmentService isas = new StockAdjustmentService(new StockAdjustmentRepository(), new StockAdjustmentValidator());
                 StockAdjustment sa = new StockAdjustment()
                 {
@@ -62,7 +72,7 @@ namespace StockControl
                 IPurchaseOrderService ipos = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
                 PurchaseOrder po = new PurchaseOrder()
                 {
-                    CustomerId = 1,
+                    ContactId = 1,
                     PurchaseDate = DateTime.Now,
                 };
                 ipos.CreateObject(po);
@@ -78,22 +88,22 @@ namespace StockControl
                 ipods.CreateObject(pod, ipos);
                 Console.WriteLine("PurchaseOrderDetail Id:{0}, ItemId:{1}, poId:{2}, Quantity:{3}, Code:{4}, Error:{5}", pod.Id, pod.ItemId, pod.PurchaseOrderId, pod.Quantity, pod.Code, pod.Errors.FirstOrDefault());
                 ipos.ConfirmObject(po, ipods, isms, iis);
-                Console.WriteLine("PurchaseOrder Confirmed Id:{0}, CustomerId:{1}, Error:{2}", po.Id, po.CustomerId, po.Errors.FirstOrDefault());
+                Console.WriteLine("PurchaseOrder Confirmed Id:{0}, ContactId:{1}, Error:{2}", po.Id, po.ContactId, po.Errors.FirstOrDefault());
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
                 IPurchaseReceivalDetailService iprds = new PurchaseReceivalDetailService(new PurchaseReceivalDetailRepository(), new PurchaseReceivalDetailValidator());
                 //ipos.UnconfirmObject(po, ipods, isms, iis, iprds);
-                //Console.WriteLine("PurchaseOrder UnConfirmed Id:{0}, CustomerId:{1}, Error:{2}", po.Id, po.CustomerId, po.Errors.FirstOrDefault());
+                //Console.WriteLine("PurchaseOrder UnConfirmed Id:{0}, ContactId:{1}, Error:{2}", po.Id, po.ContactId, po.Errors.FirstOrDefault());
                 //Console.WriteLine("Press any key to continue...");
                 //Console.ReadKey();
 
                 IPurchaseReceivalService iprs = new PurchaseReceivalService(new PurchaseReceivalRepository(), new PurchaseReceivalValidator());
                 PurchaseReceival pr = new PurchaseReceival()
                 {
-                    CustomerId = 1,
+                    PurchaseOrderId = po.Id,
                     ReceivalDate = DateTime.Now,
                 };
-                iprs.CreateObject(pr);
+                iprs.CreateObject(pr, ipos);
                 Console.WriteLine("PurchaseReceival Id:{0}, Date:{1}, Code:{2}, Error:{3}", pr.Id, pr.ReceivalDate.ToString(), pr.Code, pr.Errors.FirstOrDefault());
 
                 //IPurchaseReceivalDetailService ipods = new PurchaseReceivalDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
@@ -107,18 +117,18 @@ namespace StockControl
                 iprds.CreateObject(prd, iprs, ipods);
                 Console.WriteLine("PurchaseReceivalDetail Id:{0}, ItemId:{1}, podId:{2}, Quantity:{3}, Code:{4}, Error:{5}", prd.Id, prd.ItemId, prd.PurchaseOrderDetailId, prd.Quantity, prd.Code, prd.Errors.FirstOrDefault());
                 iprs.ConfirmObject(pr, iprds, isms, iis, ipods);
-                Console.WriteLine("PurchaseReceival Confirmed Id:{0}, CustomerId:{1}, Error:{2}", pr.Id, pr.CustomerId, pr.Errors.FirstOrDefault());
+                Console.WriteLine("PurchaseReceival Confirmed Id:{0}, poId:{1}, Error:{2}", pr.Id, pr.PurchaseOrderId, pr.Errors.FirstOrDefault());
                 //Console.WriteLine("Press any key to Unconfirm...");
                 //Console.ReadKey();
                 //iprs.UnconfirmObject(pr, iprds, isms, iis);
-                //Console.WriteLine("PurchaseReceival UnConfirmed Id:{0}, CustomerId:{1}, Error:{2}", pr.Id, pr.CustomerId, pr.Errors.FirstOrDefault());
+                //Console.WriteLine("PurchaseReceival UnConfirmed Id:{0}, ContactId:{1}, Error:{2}", pr.Id, pr.ContactId, pr.Errors.FirstOrDefault());
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
 
                 ISalesOrderService isos = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
                 SalesOrder so = new SalesOrder()
                 {
-                    CustomerId = 1,
+                    ContactId = 1,
                     SalesDate = DateTime.Now
                 };
                 isos.CreateObject(so);
@@ -134,21 +144,21 @@ namespace StockControl
                 isods.CreateObject(sod, isos, iis);
                 Console.WriteLine("SalesOrderDetail Id:{0}, ItemId:{1}, soId:{2}, Quantity:{3}, Code:{4}, Error:{5}", sod.Id, sod.ItemId, sod.SalesOrderId, sod.Quantity, sod.Code, sod.Errors.FirstOrDefault());
                 isos.ConfirmObject(so, isods, isms, iis);
-                Console.WriteLine("SalesOrder Confirmed Id:{0}, CustomerId:{1}, Error:{2}", so.Id, so.CustomerId, so.Errors.FirstOrDefault());
+                Console.WriteLine("SalesOrder Confirmed Id:{0}, ContactId:{1}, Error:{2}", so.Id, so.ContactId, so.Errors.FirstOrDefault());
                 //Console.WriteLine("Press any key to Unconfirm...");
                 //Console.ReadKey();
                 IDeliveryOrderDetailService idods = new DeliveryOrderDetailService(new DeliveryOrderDetailRepository(), new DeliveryOrderDetailValidator());
                 //isos.UnconfirmObject(so,isods,isms,iis,idods);
-                //Console.WriteLine("SalesOrder UnConfirmed Id:{0}, CustomerId:{1}, Error:{2}", so.Id, so.CustomerId, so.Errors.FirstOrDefault());
+                //Console.WriteLine("SalesOrder UnConfirmed Id:{0}, ContactId:{1}, Error:{2}", so.Id, so.ContactId, so.Errors.FirstOrDefault());
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
                 IDeliveryOrderService idos = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
                 DeliveryOrder do2 = new DeliveryOrder()
                 {
-                    CustomerId = 1,
+                    SalesOrderId = so.Id,
                     DeliveryDate = DateTime.Now,
                 };
-                idos.CreateObject(do2);
+                idos.CreateObject(do2, isos);
                 Console.WriteLine("DeliveryOrder Id:{0}, Date:{1}, Code:{2}, Error:{3}", do2.Id, do2.DeliveryDate.ToString(), do2.Code, do2.Errors.FirstOrDefault());
 
                 DeliveryOrderDetail dod = new DeliveryOrderDetail()
@@ -161,11 +171,11 @@ namespace StockControl
                 idods.CreateObject(dod, idos, isods);
                 Console.WriteLine("DeliveryOrderDetail Id:{0}, ItemId:{1}, podId:{2}, Quantity:{3}, Code:{4}, Error:{5}", dod.Id, dod.ItemId, dod.SalesOrderDetailId, dod.Quantity, dod.Code, dod.Errors.FirstOrDefault());
                 idos.ConfirmObject(do2, idods, isms, iis, isods);
-                Console.WriteLine("DeliveryOrderDetail Confirmed Id:{0}, CustomerId:{1}, Error:{2}", do2.Id, do2.CustomerId, do2.Errors.FirstOrDefault());
+                Console.WriteLine("DeliveryOrderDetail Confirmed Id:{0}, soId:{1}, Error:{2}", do2.Id, do2.SalesOrderId, do2.Errors.FirstOrDefault());
                 Console.WriteLine("Press any key to Unconfirm...");
                 Console.ReadKey();
                 idos.UnconfirmObject(do2, idods, isms, iis);
-                Console.WriteLine("DeliveryOrderDetail UnConfirmed Id:{0}, CustomerId:{1}, Error:{2}", do2.Id, do2.CustomerId, do2.Errors.FirstOrDefault());
+                Console.WriteLine("DeliveryOrderDetail UnConfirmed Id:{0}, soId:{1}, Error:{2}", do2.Id, do2.SalesOrderId, do2.Errors.FirstOrDefault());
                 
                 Console.WriteLine("Press any key to stop...");
                 Console.ReadKey();

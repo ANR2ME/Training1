@@ -11,11 +11,21 @@ namespace Validation.Validation
 {
     public class PurchaseReceivalValidator : IPurchaseReceivalValidator
     {
-        public PurchaseReceival VHasCustomer(PurchaseReceival purchaseReceival)
+        public PurchaseReceival VHasPurchaseOrder(PurchaseReceival purchaseReceival)
         {
-            if (purchaseReceival.CustomerId <= 0)
+            if (purchaseReceival.PurchaseOrderId <= 0)
             {
-                purchaseReceival.Errors.Add("Customer", "Harus ada");
+                purchaseReceival.Errors.Add("PurchaseOrder", "Harus ada");
+            }
+            return purchaseReceival;
+        }
+
+        public PurchaseReceival VHasContact(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService)
+        {
+            PurchaseOrder po = _purchaseOrderService.GetObjectById(purchaseReceival.PurchaseOrderId);
+            if (po.ContactId <= 0)
+            {
+                purchaseReceival.Errors.Add("Contact", "Harus ada");
             }
             return purchaseReceival;
         }
@@ -87,16 +97,17 @@ namespace Validation.Validation
             return purchaseReceival;
         }*/
 
-        public PurchaseReceival VCreateObject(PurchaseReceival purchaseReceival)
+        public PurchaseReceival VCreateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService)
         {
-            VHasCustomer(purchaseReceival);
+            VHasPurchaseOrder(purchaseReceival);
+            //VHasContact(purchaseReceival, _purchaseOrderService);
             VIsValidReceivalDate(purchaseReceival);
             return purchaseReceival;
         }
 
-        public PurchaseReceival VUpdateObject(PurchaseReceival purchaseReceival)
+        public PurchaseReceival VUpdateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService)
         {
-            VHasCustomer(purchaseReceival);
+            VHasContact(purchaseReceival, _purchaseOrderService);
             VIsValidReceivalDate(purchaseReceival);
             VIsNotConfirmed(purchaseReceival);
             return purchaseReceival;
@@ -123,16 +134,16 @@ namespace Validation.Validation
             return purchaseReceival;
         }
 
-        public bool ValidCreateObject(PurchaseReceival purchaseReceival)
+        public bool ValidCreateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService)
         {
-            VCreateObject(purchaseReceival);
+            VCreateObject(purchaseReceival, _purchaseOrderService);
             return isValid(purchaseReceival);
         }
 
-        public bool ValidUpdateObject(PurchaseReceival purchaseReceival)
+        public bool ValidUpdateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService)
         {
             purchaseReceival.Errors.Clear();
-            VUpdateObject(purchaseReceival);
+            VUpdateObject(purchaseReceival, _purchaseOrderService);
             return isValid(purchaseReceival);
         }
 

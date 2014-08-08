@@ -6,22 +6,20 @@ using System.Threading.Tasks;
 
 namespace Core.DomainModel
 {
-    public partial class DeliveryOrder
+    public partial class Contact
     {
         public int Id { get; set; }
-        public int SalesOrderId { get; set; }
-        public string Code { get; set; }
+        public string Name { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Address { get; set; }
         public bool IsDeleted { get; set; }
-        public bool IsConfirmed { get; set; }
-        public DateTime DeliveryDate { get; set; }
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
-        public Nullable<DateTime> ConfirmationDate { get; set; }
 
         public Dictionary<string, string> Errors { get; set; }
 
-        public virtual SalesOrder SalesOrder { get; set; }
-        public virtual ICollection<DeliveryOrderDetail> DeliveryOrderDetails { get; set; }
+        public virtual ICollection<PurchaseOrder> PurchaseOrders { get; set; }
+        public virtual ICollection<SalesOrder> SalesOrders { get; set; }
     }
 }

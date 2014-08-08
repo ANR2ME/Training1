@@ -30,6 +30,11 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IList<SalesOrder> GetObjectsByContactId(int ContactId)
+        {
+            return _repository.GetObjectsByContactId(ContactId);
+        }
+
         public SalesOrder GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);

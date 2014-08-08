@@ -11,11 +11,11 @@ namespace Validation.Validation
 {
     public class PurchaseOrderValidator : IPurchaseOrderValidator
     {
-        public PurchaseOrder VHasCustomer (PurchaseOrder purchaseOrder)
+        public PurchaseOrder VHasContact (PurchaseOrder purchaseOrder)
         {
-            if (purchaseOrder.CustomerId <= 0)
+            if (purchaseOrder.ContactId <= 0)
             {
-                purchaseOrder.Errors.Add("Customer", "Harus ada");
+                purchaseOrder.Errors.Add("Contact", "Harus ada");
             }
             return purchaseOrder;
         }
@@ -89,14 +89,14 @@ namespace Validation.Validation
 
         public PurchaseOrder VCreateObject(PurchaseOrder purchaseOrder)
         {
-            VHasCustomer(purchaseOrder);
+            VHasContact(purchaseOrder);
             VIsValidPurchaseDate(purchaseOrder);
             return purchaseOrder;
         }
 
         public PurchaseOrder VUpdateObject(PurchaseOrder purchaseOrder)
         {
-            VHasCustomer(purchaseOrder);
+            VHasContact(purchaseOrder);
             VIsValidPurchaseDate(purchaseOrder);
             VIsNotConfirmed(purchaseOrder);
             return purchaseOrder;

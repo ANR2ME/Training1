@@ -35,7 +35,7 @@ namespace Validation.Validation
             IList<StockMutation> stockMutations = _stockMutationService.GetObjectsByItemId(item.Id);
             if (stockMutations.Any())
             {
-                item.Errors.Add("StockMutations", "Tidak boleh terasosiasi dengan StockMutation");
+                item.Errors.Add("StockMutations", "Tidak boleh terasosiasi");
             }
             return item;
         }
