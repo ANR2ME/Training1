@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.DomainModel;
+using Core.Interface.Service;
 using Core.Interface.Validation;
 
 namespace Validation.Validation
@@ -28,9 +29,10 @@ namespace Validation.Validation
             return stockMutation;
         }
 
-        public StockMutation VHasItem(StockMutation stockMutation)
+        public StockMutation VHasItem(StockMutation stockMutation, IItemService _itemService)
         {
-            if (stockMutation.ItemId <= 0)
+            Item i = _itemService.GetObjectById(stockMutation.ItemId);
+            if (i == null)
             {
                 stockMutation.Errors.Add("Item", "Harus ada");
             }
@@ -77,7 +79,7 @@ namespace Validation.Validation
             return stockMutation;
         }
 
-        public StockMutation VIsValidQuantity(StockMutation stockMutation)
+        public StockMutation VIsPositiveQuantity(StockMutation stockMutation)
         {
             if (stockMutation.Quantity <= 0)
             {
@@ -86,16 +88,16 @@ namespace Validation.Validation
             return stockMutation;
         }
 
-        public StockMutation VCreateObject(StockMutation stockMutation)
+        public StockMutation VCreateObject(StockMutation stockMutation, IItemService _itemService)
         {
             VIsValidItemCase(stockMutation);
             VIsValidStatus(stockMutation);
-            VHasItem(stockMutation);
+            VHasItem(stockMutation, _itemService);
             VHasSourceDocument(stockMutation);
             VHasSourceDocumentDetail(stockMutation);
             VIsValidSourceDocumentType(stockMutation);
             VIsValidSourceDocumentDetailType(stockMutation);
-            VIsValidQuantity(stockMutation);
+            VIsPositiveQuantity(stockMutation);
             return stockMutation;
         }
 
@@ -117,9 +119,9 @@ namespace Validation.Validation
             return stockMutation;
         }
 
-        public bool ValidCreateObject(StockMutation stockMutation)
+        public bool ValidCreateObject(StockMutation stockMutation, IItemService _itemService)
         {
-            VCreateObject(stockMutation);
+            VCreateObject(stockMutation, _itemService);
             return isValid(stockMutation);
         }
 

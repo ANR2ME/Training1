@@ -13,7 +13,7 @@ namespace Validation.Validation
     {
         public StockAdjustment VIsValidAdjustmentDate(StockAdjustment stockAdjustment)
         {
-            if (stockAdjustment.AdjustmentDate == null)
+            if (stockAdjustment.AdjustmentDate == null || stockAdjustment.AdjustmentDate.Equals(DateTime.FromBinary(0)))
             {
                 stockAdjustment.Errors.Add("AdjustmentDate", "Tidak Valid");
             }

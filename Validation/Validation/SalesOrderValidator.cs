@@ -11,10 +11,10 @@ namespace Validation.Validation
 {
     public class SalesOrderValidator : ISalesOrderValidator
     {
-        public SalesOrder VHasContact(SalesOrder salesOrder)
+        public SalesOrder VHasContact(SalesOrder salesOrder, IContactService _contactService)
         {
-            //TODO: try to get the object
-            if (salesOrder.ContactId <= 0)
+            Contact contact = _contactService.GetObjectById(salesOrder.ContactId);
+            if (contact == null)
             {
                 salesOrder.Errors.Add("Contact", "Harus ada");
             }
@@ -23,7 +23,7 @@ namespace Validation.Validation
 
         public SalesOrder VIsValidSalesDate(SalesOrder salesOrder)
         {
-            if (salesOrder.SalesDate == null)
+            if (salesOrder.SalesDate == null || salesOrder.SalesDate.Equals(DateTime.FromBinary(0)))
             {
                 salesOrder.Errors.Add("SalesDate", "Tidak Valid");
             }
@@ -75,7 +75,7 @@ namespace Validation.Validation
             foreach (var sad in salesOrderDetails)
             {
                 Item item = _itemService.GetObjectById(sad.ItemId);
-                if (item.Quantity - sad.Quantity < 0) // should be item.Quantity - total salesOrderDetails.Quantity
+                if (item.Quantity - sad.Quantity < 0) // should be item.Quantity - total salesOrderDetails.Quantity ?
                 {
                     valid = false;
                     break;
@@ -88,16 +88,16 @@ namespace Validation.Validation
             return salesOrder;
         }
 
-        public SalesOrder VCreateObject(SalesOrder salesOrder)
+        public SalesOrder VCreateObject(SalesOrder salesOrder, IContactService _contactService)
         {
-            VHasContact(salesOrder);
+            VHasContact(salesOrder, _contactService);
             VIsValidSalesDate(salesOrder);
             return salesOrder;
         }
 
-        public SalesOrder VUpdateObject(SalesOrder salesOrder)
+        public SalesOrder VUpdateObject(SalesOrder salesOrder, IContactService _contactService)
         {
-            VHasContact(salesOrder);
+            VHasContact(salesOrder, _contactService);
             VIsValidSalesDate(salesOrder);
             VIsNotConfirmed(salesOrder);
             return salesOrder;
@@ -125,16 +125,16 @@ namespace Validation.Validation
             return salesOrder;
         }
 
-        public bool ValidCreateObject(SalesOrder salesOrder)
+        public bool ValidCreateObject(SalesOrder salesOrder, IContactService _contactService)
         {
-            VCreateObject(salesOrder);
+            VCreateObject(salesOrder, _contactService);
             return isValid(salesOrder);
         }
 
-        public bool ValidUpdateObject(SalesOrder salesOrder)
+        public bool ValidUpdateObject(SalesOrder salesOrder, IContactService _contactService)
         {
             salesOrder.Errors.Clear();
-            VUpdateObject(salesOrder);
+            VUpdateObject(salesOrder, _contactService);
             return isValid(salesOrder);
         }
 

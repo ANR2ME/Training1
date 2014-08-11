@@ -19,6 +19,8 @@ namespace TestValidation
 
         IItemService _itemService;
         IStockMutationService _stockMutationService;
+        IStockAdjustmentService _stockAdjustmentService;
+        IStockAdjustmentDetailService _stockAdjustmentDetailService;
 
         void before_each()
         {
@@ -28,6 +30,8 @@ namespace TestValidation
                 db.DeleteAllTables();
                 _itemService = new ItemService(new ItemRepository(), new ItemValidator());
                 _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
+                _stockAdjustmentService = new StockAdjustmentService(new StockAdjustmentRepository(), new StockAdjustmentValidator());
+                _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
 
                 item = new Item()
                 {
@@ -154,18 +158,32 @@ namespace TestValidation
 
             it["delete_item_with_stockmutations"] = () =>
             {
+                StockAdjustment sa = new StockAdjustment()
+                {
+                    AdjustmentDate = DateTime.Now
+                };
+                _stockAdjustmentService.CreateObject(sa);
+
+                StockAdjustmentDetail sad = new StockAdjustmentDetail()
+                {
+                    ItemId = item.Id,
+                    StockAdjustmentId = sa.Id,
+                    Quantity = 100
+                };
+                _stockAdjustmentDetailService.CreateObject(sad, _stockAdjustmentService, _itemService);
+
                 StockMutation sm = new StockMutation()
                 {
                     ItemCase = "Ready",
                     Status = "Addition",
                     ItemId = item.Id,
-                    Quantity = 1,
-                    SourceDocumentId = 1,
+                    Quantity = 10,
+                    SourceDocumentId = sa.Id,
                     SourceDocumentType = "StockAdjustment",
-                    SourceDocumentDetailId = 1,
+                    SourceDocumentDetailId = sad.Id,
                     SourceDocumentDetailType = "StockAdjustmentDetail"
                 };
-                sm = _stockMutationService.CreateObject(sm);
+                sm = _stockMutationService.CreateObject(sm, _itemService);
                 if (sm.Errors.Count() > 0) Console.WriteLine("sm.Error:{0}", sm.Errors.FirstOrDefault());
                 sm.Errors.Count().should_be(0); 
 

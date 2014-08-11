@@ -35,15 +35,15 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public PurchaseReceival CreateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService)
+        public PurchaseReceival CreateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService, IContactService _contactService)
         {
             purchaseReceival.Errors = new Dictionary<String, String>();
-            return (purchaseReceival = _validator.ValidCreateObject(purchaseReceival, _purchaseOrderService) ? _repository.CreateObject(purchaseReceival) : purchaseReceival);
+            return (purchaseReceival = _validator.ValidCreateObject(purchaseReceival, _purchaseOrderService, _contactService) ? _repository.CreateObject(purchaseReceival) : purchaseReceival);
         }
 
-        public PurchaseReceival UpdateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService)
+        public PurchaseReceival UpdateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService, IContactService _contactService)
         {
-            return (purchaseReceival = _validator.ValidUpdateObject(purchaseReceival, _purchaseOrderService) ? _repository.UpdateObject(purchaseReceival) : purchaseReceival);
+            return (purchaseReceival = _validator.ValidUpdateObject(purchaseReceival, _purchaseOrderService, _contactService) ? _repository.UpdateObject(purchaseReceival) : purchaseReceival);
         }
 
         public PurchaseReceival ConfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IStockMutationService _stockMutationService, IItemService _itemService, IPurchaseOrderDetailService _purchaseOrderDetailService)

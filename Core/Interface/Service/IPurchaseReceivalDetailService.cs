@@ -12,12 +12,13 @@ namespace Core.Interface.Service
     {
         IPurchaseReceivalDetailValidator GetValidator();
         IList<PurchaseReceivalDetail> GetAll();
+        IList<PurchaseReceivalDetail> GetObjectsByItemId(int ItemId);
         IList<PurchaseReceivalDetail> GetObjectsByPurchaseReceivalId(int PurchaseReceivalId);
         IList<PurchaseReceivalDetail> GetConfirmedObjectsByPurchaseReceivalId(int PurchaseReceivalId);
         IList<PurchaseReceivalDetail> GetObjectsByPurchaseOrderDetailId(int PurchaseOrderDetailId);
         PurchaseReceivalDetail GetObjectById(int Id);
-        PurchaseReceivalDetail CreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService);
-        PurchaseReceivalDetail UpdateObject(PurchaseReceivalDetail purchaseReceivalDetail);
+        PurchaseReceivalDetail CreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService, IItemService _itemService, IPurchaseOrderDetailService _purchaseOrderDetailService);
+        PurchaseReceivalDetail UpdateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService, IItemService _itemService, IPurchaseOrderDetailService _purchaseOrderDetailService);
         PurchaseReceivalDetail SoftDeleteObject(PurchaseReceivalDetail purchaseReceivalDetail);
         PurchaseReceivalDetail ConfirmObject(PurchaseReceivalDetail purchaseReceivalDetail, IStockMutationService _stockMutationService, IItemService _itemService, IPurchaseOrderDetailService _purchaseOrderDetailService);
         PurchaseReceivalDetail UnconfirmObject(PurchaseReceivalDetail purchaseReceivalDetail, IStockMutationService _stockMutationService, IItemService _itemService);

@@ -30,6 +30,11 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IList<StockAdjustmentDetail> GetObjectsByItemId(int ItemId)
+        {
+            return _repository.GetObjectsByItemId(ItemId);
+        }
+
         public IList<StockAdjustmentDetail> GetObjectsByStockAdjustmentId(int StockAdjustmentId)
         {
             return _repository.GetObjectsByStockAdjustmentId(StockAdjustmentId);
@@ -45,16 +50,16 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public StockAdjustmentDetail CreateObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService)
+        public StockAdjustmentDetail CreateObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IItemService _itemService)
         {
             stockAdjustmentDetail.Errors = new Dictionary<String, String>();
             StockAdjustment sa = _stockAdjustmentService.GetObjectById(stockAdjustmentDetail.StockAdjustmentId);
-            return (stockAdjustmentDetail = _validator.ValidCreateObject(stockAdjustmentDetail, this) ? _repository.CreateObject(stockAdjustmentDetail, sa.Code) : stockAdjustmentDetail);
+            return (stockAdjustmentDetail = _validator.ValidCreateObject(stockAdjustmentDetail, this, _stockAdjustmentService, _itemService) ? _repository.CreateObject(stockAdjustmentDetail, sa.Code) : stockAdjustmentDetail);
         }
 
-        public StockAdjustmentDetail UpdateObject(StockAdjustmentDetail stockAdjustmentDetail)
+        public StockAdjustmentDetail UpdateObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IItemService _itemService)
         {
-            return (stockAdjustmentDetail = _validator.ValidUpdateObject(stockAdjustmentDetail, this) ? _repository.UpdateObject(stockAdjustmentDetail) : stockAdjustmentDetail);
+            return (stockAdjustmentDetail = _validator.ValidUpdateObject(stockAdjustmentDetail, this, _stockAdjustmentService, _itemService) ? _repository.UpdateObject(stockAdjustmentDetail) : stockAdjustmentDetail);
         }
 
         public StockAdjustmentDetail SoftDeleteObject(StockAdjustmentDetail stockAdjustmentDetail)

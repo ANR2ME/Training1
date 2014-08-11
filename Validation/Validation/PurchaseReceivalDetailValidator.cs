@@ -11,27 +11,30 @@ namespace Validation.Validation
 {
     public class PurchaseReceivalDetailValidator : IPurchaseReceivalDetailValidator
     {
-        public PurchaseReceivalDetail VHasPurchaseReceival(PurchaseReceivalDetail purchaseReceivalDetail)
+        public PurchaseReceivalDetail VHasPurchaseReceival(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService)
         {
-            if (purchaseReceivalDetail.PurchaseReceivalId <= 0)
+            PurchaseReceival pr = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
+            if (pr == null)
             {
                 purchaseReceivalDetail.Errors.Add("PurchaseReceival", "Harus Ada");
             }
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VHasItem(PurchaseReceivalDetail purchaseReceivalDetail)
+        public PurchaseReceivalDetail VHasItem(PurchaseReceivalDetail purchaseReceivalDetail, IItemService _itemService)
         {
-            if (purchaseReceivalDetail.ItemId <= 0)
+            Item i = _itemService.GetObjectById(purchaseReceivalDetail.ItemId);
+            if (i == null)
             {
                 purchaseReceivalDetail.Errors.Add("Item", "Harus Ada");
             }
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VHasPurchaseOrderDetail(PurchaseReceivalDetail purchaseReceivalDetail)
+        public PurchaseReceivalDetail VHasPurchaseOrderDetail(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
-            if (purchaseReceivalDetail.PurchaseOrderDetailId <= 0)
+            PurchaseOrderDetail pod = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
+            if (pod == null)
             {
                 purchaseReceivalDetail.Errors.Add("PurchaseOrderDetail", "Harus Ada");
             }
@@ -68,7 +71,7 @@ namespace Validation.Validation
         public PurchaseReceivalDetail VIsUnconfirmQuantityValid(PurchaseReceivalDetail purchaseReceivalDetail, IItemService _itemService)
         {
             Item item = _itemService.GetObjectById(purchaseReceivalDetail.ItemId);
-            if (item.Quantity < purchaseReceivalDetail.Quantity)
+            if (item == null || item.Quantity < purchaseReceivalDetail.Quantity)
             {
                 purchaseReceivalDetail.Errors.Add("Item Ready", "Harus lebih besar atau sama dengan Quantity");
             }
@@ -77,17 +80,13 @@ namespace Validation.Validation
 
         public PurchaseReceivalDetail VIsItemUnique(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
         {
-            IList<PurchaseReceivalDetail> purchaseReceivalDetails = _purchaseReceivalDetailService.GetObjectsByPurchaseReceivalId(purchaseReceivalDetail.PurchaseReceivalId);
-            bool unique = true;
-            foreach (var sad in purchaseReceivalDetails)
+            IList<PurchaseReceivalDetail> purchaseReceivalDetails = _purchaseReceivalDetailService.GetObjectsByItemId(purchaseReceivalDetail.ItemId);
+            int same = 0;
+            foreach (var d in purchaseReceivalDetails)
             {
-                if (sad.ItemId == purchaseReceivalDetail.ItemId && sad.Id != purchaseReceivalDetail.Id && !sad.IsDeleted)
-                {
-                    unique = false;
-                    break;
-                }
+                if (d.ItemId == purchaseReceivalDetail.ItemId && d.PurchaseReceivalId == purchaseReceivalDetail.PurchaseReceivalId && !d.IsDeleted) same++;
             }
-            if (!unique)
+            if (same > 0)
             {
                 purchaseReceivalDetail.Errors.Add("Item", "Harus unik");
             }
@@ -97,7 +96,7 @@ namespace Validation.Validation
         public PurchaseReceivalDetail VIsValidOrderQuantity(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
             PurchaseOrderDetail x = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
-            if (purchaseReceivalDetail.Quantity > x.Quantity)
+            if (x == null || purchaseReceivalDetail.Quantity > x.Quantity)
             {
                 purchaseReceivalDetail.Errors.Add("Quantity", "Harus lebih kecil atau sama dengan PurchaseOrderDetail Quantity");
             }
@@ -107,29 +106,29 @@ namespace Validation.Validation
         public PurchaseReceivalDetail VIsOrderDetailConfirmed(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
             PurchaseOrderDetail x = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
-            if (!x.IsConfirmed)
+            if (x == null || !x.IsConfirmed)
             {
                 purchaseReceivalDetail.Errors.Add("PurchaseOrderDetail", "Harus Terkonfirmasi");
             }
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VCreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        public PurchaseReceivalDetail VCreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService, IItemService _itemService, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
-            VHasPurchaseReceival(purchaseReceivalDetail);
-            VHasItem(purchaseReceivalDetail);
-            VHasPurchaseOrderDetail(purchaseReceivalDetail);
+            VHasPurchaseReceival(purchaseReceivalDetail, _purchaseReceivalService);
+            VHasItem(purchaseReceivalDetail, _itemService);
+            VHasPurchaseOrderDetail(purchaseReceivalDetail, _purchaseOrderDetailService);
             VIsPositiveQuantity(purchaseReceivalDetail);
             VIsItemUnique(purchaseReceivalDetail, _purchaseReceivalDetailService);
             VIsValidOrderQuantity(purchaseReceivalDetail, _purchaseOrderDetailService);
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VUpdateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
+        public PurchaseReceivalDetail VUpdateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService, IItemService _itemService, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
-            VHasPurchaseReceival(purchaseReceivalDetail);
-            VHasItem(purchaseReceivalDetail);
-            VHasPurchaseOrderDetail(purchaseReceivalDetail);
+            VHasPurchaseReceival(purchaseReceivalDetail, _purchaseReceivalService);
+            VHasItem(purchaseReceivalDetail, _itemService);
+            VHasPurchaseOrderDetail(purchaseReceivalDetail, _purchaseOrderDetailService);
             VIsPositiveQuantity(purchaseReceivalDetail);
             VIsItemUnique(purchaseReceivalDetail, _purchaseReceivalDetailService);
             VIsNotConfirmed(purchaseReceivalDetail);
@@ -162,16 +161,16 @@ namespace Validation.Validation
             return purchaseReceivalDetail;
         }
 
-        public bool ValidCreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        public bool ValidCreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService, IItemService _itemService, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
-            VCreateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseOrderDetailService);
+            VCreateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseReceivalService, _itemService, _purchaseOrderDetailService);
             return isValid(purchaseReceivalDetail);
         }
 
-        public bool ValidUpdateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
+        public bool ValidUpdateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService, IItemService _itemService, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
             purchaseReceivalDetail.Errors.Clear();
-            VUpdateObject(purchaseReceivalDetail, _purchaseReceivalDetailService);
+            VUpdateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseReceivalService, _itemService, _purchaseOrderDetailService);
             return isValid(purchaseReceivalDetail);
         }
 

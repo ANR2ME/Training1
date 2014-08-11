@@ -10,7 +10,7 @@ namespace Core.Interface.Validation
 {
     public interface ISalesOrderValidator
     {
-        SalesOrder VHasContact(SalesOrder salesOrder);
+        SalesOrder VHasContact(SalesOrder salesOrder, IContactService _contactService);
         SalesOrder VIsValidSalesDate(SalesOrder salesOrder);
         SalesOrder VIsConfirmed(SalesOrder salesOrder);
         SalesOrder VIsNotConfirmed(SalesOrder salesOrder);
@@ -19,12 +19,12 @@ namespace Core.Interface.Validation
         SalesOrder VIsValidSalesOrderDetailsQuantity(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService, IItemService _itemService);
         SalesOrder VConfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService, IItemService _itemService);
         SalesOrder VUnconfirmObject(SalesOrder salesOrder);
-        SalesOrder VCreateObject(SalesOrder salesOrder);
-        SalesOrder VUpdateObject(SalesOrder salesOrder);
+        SalesOrder VCreateObject(SalesOrder salesOrder, IContactService _contactService);
+        SalesOrder VUpdateObject(SalesOrder salesOrder, IContactService _contactService);
         SalesOrder VDeleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
 
-        bool ValidCreateObject(SalesOrder salesOrder);
-        bool ValidUpdateObject(SalesOrder salesOrder);
+        bool ValidCreateObject(SalesOrder salesOrder, IContactService _contactService);
+        bool ValidUpdateObject(SalesOrder salesOrder, IContactService _contactService);
         bool ValidDeleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
         bool ValidConfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService, IItemService _itemService);
         bool ValidUnconfirmObject(SalesOrder salesOrder);

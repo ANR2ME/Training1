@@ -61,13 +61,18 @@ namespace Data.Repository
 
         public SalesOrder ConfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService, IItemService _itemService)
         {
-            salesOrder.IsConfirmed = true;
-            salesOrder.ConfirmationDate = DateTime.Now;
-            Update(salesOrder);
             IList<SalesOrderDetail> salesOrderDetails = _salesOrderDetailService.GetObjectsBySalesOrderId(salesOrder.Id);
-            foreach (var pod in salesOrderDetails)
+            int unconfirmed = 0;
+            foreach (var sod in salesOrderDetails)
             {
-                _salesOrderDetailService.ConfirmObject(pod, _stockMutationService, _itemService);
+                _salesOrderDetailService.ConfirmObject(sod, _stockMutationService, _itemService);
+                if (!sod.IsConfirmed) unconfirmed++;
+            }
+            if (unconfirmed == 0)
+            {
+                salesOrder.IsConfirmed = true;
+                salesOrder.ConfirmationDate = DateTime.Now;
+                Update(salesOrder);
             }
             return salesOrder;
         }

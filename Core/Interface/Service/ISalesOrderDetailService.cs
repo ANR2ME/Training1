@@ -12,11 +12,12 @@ namespace Core.Interface.Service
     {
         ISalesOrderDetailValidator GetValidator();
         IList<SalesOrderDetail> GetAll();
+        IList<SalesOrderDetail> GetObjectsByItemId(int ItemId);
         IList<SalesOrderDetail> GetObjectsBySalesOrderId(int SalesOrderId);
         IList<SalesOrderDetail> GetConfirmedObjectsBySalesOrderId(int SalesOrderId);
         SalesOrderDetail GetObjectById(int Id);
         SalesOrderDetail CreateObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, IItemService _itemService);
-        SalesOrderDetail UpdateObject(SalesOrderDetail salesOrderDetail, IItemService _itemService);
+        SalesOrderDetail UpdateObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, IItemService _itemService);
         SalesOrderDetail SoftDeleteObject(SalesOrderDetail salesOrderDetail);
         SalesOrderDetail ConfirmObject(SalesOrderDetail salesOrderDetail, IStockMutationService _stockMutationService, IItemService _itemService);
         SalesOrderDetail UnconfirmObject(SalesOrderDetail salesOrderDetail, IStockMutationService _stockMutationService, IItemService _itemService, IDeliveryOrderDetailService _deliveryOrderDetailService);

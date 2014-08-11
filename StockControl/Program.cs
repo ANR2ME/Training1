@@ -19,37 +19,128 @@ namespace StockControl
             var db = new StockControlEntities();
             using (db)
             {
-                /*SalesOrder salesOrder;
-                Contact contact;
+                int jumlah1, jumlah2;
+                DateTime now;
+                Contact contact, contact2;
+                Item item;
+                SalesOrder valid_induk1, valid_induk2, invalid_induk1, invalid_induk2;
+                SalesOrderDetail valid_anak1, valid_anak2, invalid_anak1, invalid_anak2, invalid_anak3;
+
                 IItemService _itemService;
                 IStockMutationService _stockMutationService;
+                IContactService _contactService;
                 ISalesOrderDetailService _salesOrderDetailService;
                 ISalesOrderService _salesOrderService;
-                IContactService _contactService;
+                IDeliveryOrderService _deliveryOrderService;
 
                 db.DeleteAllTables();
                 _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+                _contactService = new ContactService(new ContactRepository(), new ContactValidator());
                 _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
                 _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
                 _salesOrderService = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
-                _contactService = new ContactService(new ContactRepository(), new ContactValidator());
+                _deliveryOrderService = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
+
+                now = DateTime.Now;
+                jumlah1 = 30;
+                jumlah2 = 40;
 
                 contact = new Contact()
                 {
-                    Address = "Test",
-                    PhoneNumber = "Test",
-                    Name = "Name"
+                    Address = "Jl. XXX",
+                    PhoneNumber = "021-3456",
+                    Name = "Adam"
                 };
                 contact = _contactService.CreateObject(contact);
+                if (contact.Errors.Count() > 0) Console.WriteLine("contact.Error:{0}", contact.Errors.FirstOrDefault());
+                contact2 = new Contact()
+                {
+                    Address = "Jl. YYY",
+                    PhoneNumber = "021-7890",
+                    Name = "Bernard"
+                };
+                contact2 = _contactService.CreateObject(contact2);
+                if (contact2.Errors.Count() > 0) Console.WriteLine("contact2.Error:{0}", contact2.Errors.FirstOrDefault());
 
-                salesOrder = new SalesOrder()
+                item = new Item()
+                {
+                    Sku = "B001",
+                    Description = "Buku Tulis AA",
+                    Quantity = jumlah1,
+                    PendingDelivery = 0,
+                    PendingReceival = 0
+                };
+                _itemService.CreateObject(item);
+                if (item.Errors.Count() > 0) Console.WriteLine("item.Error:{0}", item.Errors.FirstOrDefault());
+
+                valid_induk1 = new SalesOrder()
                 {
                     ContactId = contact.Id,
-                    SalesDate = DateTime.Now
+                    SalesDate = now
                 };
-                salesOrder = _salesOrderService.CreateObject(salesOrder);*/
+                _salesOrderService.CreateObject(valid_induk1, _contactService);
+
+                valid_induk2 = new SalesOrder()
+                {
+                    ContactId = contact.Id,
+                    SalesDate = now
+                };
+                _salesOrderService.CreateObject(valid_induk2, _contactService);
+
+                invalid_induk1 = new SalesOrder()
+                {
+                    SalesDate = now
+                };
+                _salesOrderService.CreateObject(invalid_induk1, _contactService);
+
+                invalid_induk2 = new SalesOrder()
+                {
+                    ContactId = contact.Id
+                };
+                _salesOrderService.CreateObject(invalid_induk2, _contactService);
+
+                valid_anak1 = new SalesOrderDetail()
+                {
+                    ItemId = item.Id,
+                    SalesOrderId = valid_induk1.Id,
+                    Quantity = jumlah1
+                };
+
+                valid_anak2 = new SalesOrderDetail()
+                {
+                    ItemId = item.Id,
+                    SalesOrderId = valid_induk2.Id,
+                    Quantity = jumlah2
+                };
+
+                invalid_anak1 = new SalesOrderDetail()
+                {
+                    SalesOrderId = valid_induk1.Id,
+                    Quantity = jumlah1
+                };
+
+                invalid_anak2 = new SalesOrderDetail()
+                {
+                    ItemId = item.Id,
+                    Quantity = jumlah1
+                };
+
+                invalid_anak3 = new SalesOrderDetail()
+                {
+                    ItemId = item.Id,
+                    SalesOrderId = valid_induk1.Id,
+                };
+
+                _salesOrderDetailService.CreateObject(invalid_anak1, _salesOrderService, _itemService);
+                _salesOrderDetailService.CreateObject(invalid_anak2, _salesOrderService, _itemService);
+                _salesOrderDetailService.CreateObject(invalid_anak3, _salesOrderService, _itemService);
+
+                _salesOrderDetailService.CreateObject(valid_anak1, _salesOrderService, _itemService);
+                _salesOrderDetailService.CreateObject(valid_anak1, _salesOrderService, _itemService);
+
+
                 
-                IItemService iis = new ItemService(new ItemRepository(), new ItemValidator());
+                /*IItemService iis = new ItemService(new ItemRepository(), new ItemValidator());
                 Item item = new Item()
                 {
                     Sku = "tes001",
@@ -86,7 +177,7 @@ namespace StockControl
                     StockAdjustmentId = sa.Id,
                     Quantity = 100
                 };
-                isads.CreateObject(sad, isas);
+                isads.CreateObject(sad, isas, iis);
                 Console.WriteLine("StockAdjustmentDetail Id:{0}, ItemId:{1}, saId:{2}, Quantity:{3}, Code:{4}, Error:{5}", sad.Id, sad.ItemId, sad.StockAdjustmentId, sad.Quantity, sad.Code, sad.Errors.FirstOrDefault());
                 IStockMutationService isms = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
 
@@ -105,7 +196,7 @@ namespace StockControl
                     ContactId = 1,
                     PurchaseDate = DateTime.Now,
                 };
-                ipos.CreateObject(po);
+                ipos.CreateObject(po, ics);
                 Console.WriteLine("PurchaseOrder Id:{0}, Date:{1}, Code:{2}, Error:{3}", po.Id, po.PurchaseDate.ToString(), po.Code, po.Errors.FirstOrDefault());
 
                 IPurchaseOrderDetailService ipods = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
@@ -115,7 +206,7 @@ namespace StockControl
                     PurchaseOrderId = po.Id,
                     Quantity = 20
                 };
-                ipods.CreateObject(pod, ipos);
+                ipods.CreateObject(pod, ipos, iis);
                 Console.WriteLine("PurchaseOrderDetail Id:{0}, ItemId:{1}, poId:{2}, Quantity:{3}, Code:{4}, Error:{5}", pod.Id, pod.ItemId, pod.PurchaseOrderId, pod.Quantity, pod.Code, pod.Errors.FirstOrDefault());
                 ipos.ConfirmObject(po, ipods, isms, iis);
                 Console.WriteLine("PurchaseOrder Confirmed Id:{0}, ContactId:{1}, Error:{2}", po.Id, po.ContactId, po.Errors.FirstOrDefault());
@@ -133,7 +224,7 @@ namespace StockControl
                     PurchaseOrderId = po.Id,
                     ReceivalDate = DateTime.Now,
                 };
-                iprs.CreateObject(pr, ipos);
+                iprs.CreateObject(pr, ipos, ics);
                 Console.WriteLine("PurchaseReceival Id:{0}, Date:{1}, Code:{2}, Error:{3}", pr.Id, pr.ReceivalDate.ToString(), pr.Code, pr.Errors.FirstOrDefault());
 
                 //IPurchaseReceivalDetailService ipods = new PurchaseReceivalDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
@@ -144,7 +235,7 @@ namespace StockControl
                     PurchaseOrderDetailId = pod.Id,
                     Quantity = 20
                 };
-                iprds.CreateObject(prd, iprs, ipods);
+                iprds.CreateObject(prd, iprds, iprs, iis, ipods);
                 Console.WriteLine("PurchaseReceivalDetail Id:{0}, ItemId:{1}, podId:{2}, Quantity:{3}, Code:{4}, Error:{5}", prd.Id, prd.ItemId, prd.PurchaseOrderDetailId, prd.Quantity, prd.Code, prd.Errors.FirstOrDefault());
                 iprs.ConfirmObject(pr, iprds, isms, iis, ipods);
                 Console.WriteLine("PurchaseReceival Confirmed Id:{0}, poId:{1}, Error:{2}", pr.Id, pr.PurchaseOrderId, pr.Errors.FirstOrDefault());
@@ -161,7 +252,7 @@ namespace StockControl
                     ContactId = 1,
                     SalesDate = DateTime.Now
                 };
-                isos.CreateObject(so);
+                isos.CreateObject(so, ics);
                 Console.WriteLine("SalesOrder Id:{0}, Date:{1}, Code:{2}, Error:{3}", so.Id, so.SalesDate.ToString(), so.Code, so.Errors.FirstOrDefault());
 
                 ISalesOrderDetailService isods = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
@@ -183,30 +274,30 @@ namespace StockControl
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
                 IDeliveryOrderService idos = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
-                DeliveryOrder do2 = new DeliveryOrder()
+                DeliveryOrder dor = new DeliveryOrder()
                 {
                     SalesOrderId = so.Id,
                     DeliveryDate = DateTime.Now,
                 };
-                idos.CreateObject(do2, isos);
-                Console.WriteLine("DeliveryOrder Id:{0}, Date:{1}, Code:{2}, Error:{3}", do2.Id, do2.DeliveryDate.ToString(), do2.Code, do2.Errors.FirstOrDefault());
+                idos.CreateObject(dor, isos, ics);
+                Console.WriteLine("DeliveryOrder Id:{0}, Date:{1}, Code:{2}, Error:{3}", dor.Id, dor.DeliveryDate.ToString(), dor.Code, dor.Errors.FirstOrDefault());
 
                 DeliveryOrderDetail dod = new DeliveryOrderDetail()
                 {
                     ItemId = item.Id,
-                    DeliveryOrderId = do2.Id,
+                    DeliveryOrderId = dor.Id,
                     SalesOrderDetailId = sod.Id,
                     Quantity = 20
                 };
-                idods.CreateObject(dod, idos, isods);
+                idods.CreateObject(dod, iis, idos, isods);
                 Console.WriteLine("DeliveryOrderDetail Id:{0}, ItemId:{1}, podId:{2}, Quantity:{3}, Code:{4}, Error:{5}", dod.Id, dod.ItemId, dod.SalesOrderDetailId, dod.Quantity, dod.Code, dod.Errors.FirstOrDefault());
-                idos.ConfirmObject(do2, idods, isms, iis, isods);
-                Console.WriteLine("DeliveryOrderDetail Confirmed Id:{0}, soId:{1}, Error:{2}", do2.Id, do2.SalesOrderId, do2.Errors.FirstOrDefault());
+                idos.ConfirmObject(dor, idods, isms, iis, isods);
+                Console.WriteLine("DeliveryOrderDetail Confirmed Id:{0}, soId:{1}, Error:{2}", dor.Id, dor.SalesOrderId, dor.Errors.FirstOrDefault());
                 Console.WriteLine("Press any key to Unconfirm...");
                 Console.ReadKey();
-                idos.UnconfirmObject(do2, idods, isms, iis);
-                Console.WriteLine("DeliveryOrderDetail UnConfirmed Id:{0}, soId:{1}, Error:{2}", do2.Id, do2.SalesOrderId, do2.Errors.FirstOrDefault());
-                
+                idos.UnconfirmObject(dor, idods, isms, iis);
+                Console.WriteLine("DeliveryOrderDetail UnConfirmed Id:{0}, soId:{1}, Error:{2}", dor.Id, dor.SalesOrderId, dor.Errors.FirstOrDefault());
+                */
                 Console.WriteLine("Press any key to stop...");
                 Console.ReadKey();
             }

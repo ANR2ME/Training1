@@ -30,6 +30,11 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IList<SalesOrderDetail> GetObjectsByItemId(int ItemId)
+        {
+            return _repository.GetObjectsByItemId(ItemId);
+        }
+
         public IList<SalesOrderDetail> GetObjectsBySalesOrderId(int SalesOrderId)
         {
             return _repository.GetObjectsBySalesOrderId(SalesOrderId);
@@ -49,12 +54,12 @@ namespace Service.Service
         {
             salesOrderDetail.Errors = new Dictionary<String, String>();
             SalesOrder sa = _salesOrderService.GetObjectById(salesOrderDetail.SalesOrderId);
-            return (salesOrderDetail = _validator.ValidCreateObject(salesOrderDetail, this, _itemService) ? _repository.CreateObject(salesOrderDetail, sa.Code) : salesOrderDetail);
+            return (salesOrderDetail = _validator.ValidCreateObject(salesOrderDetail, this, _salesOrderService, _itemService) ? _repository.CreateObject(salesOrderDetail, sa.Code) : salesOrderDetail);
         }
 
-        public SalesOrderDetail UpdateObject(SalesOrderDetail salesOrderDetail, IItemService _itemService)
+        public SalesOrderDetail UpdateObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, IItemService _itemService)
         {
-            return (salesOrderDetail = _validator.ValidUpdateObject(salesOrderDetail, this, _itemService) ? _repository.UpdateObject(salesOrderDetail) : salesOrderDetail);
+            return (salesOrderDetail = _validator.ValidUpdateObject(salesOrderDetail, this, _salesOrderService, _itemService) ? _repository.UpdateObject(salesOrderDetail) : salesOrderDetail);
         }
 
         public SalesOrderDetail SoftDeleteObject(SalesOrderDetail salesOrderDetail)

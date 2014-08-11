@@ -14,8 +14,8 @@ namespace Core.Interface.Service
         IList<SalesOrder> GetAll();
         IList<SalesOrder> GetObjectsByContactId(int ContactId);
         SalesOrder GetObjectById(int Id);
-        SalesOrder CreateObject(SalesOrder salesOrder);
-        SalesOrder UpdateObject(SalesOrder salesOrder);
+        SalesOrder CreateObject(SalesOrder salesOrder, IContactService _contactService);
+        SalesOrder UpdateObject(SalesOrder salesOrder, IContactService _contactService);
         SalesOrder ConfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService, IItemService _itemService);
         SalesOrder UnconfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService, IItemService _itemService, IDeliveryOrderDetailService _deliveryOrderDetailService);
         SalesOrder SoftDeleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);

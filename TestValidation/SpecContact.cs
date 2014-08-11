@@ -147,7 +147,7 @@ namespace TestValidation
                     ContactId = contact.Id,
                     PurchaseDate = DateTime.Now,
                 };
-                x = _purchaseOrderService.CreateObject(x);
+                x = _purchaseOrderService.CreateObject(x, _contactService);
                 if (x.Errors.Count() > 0) Console.WriteLine("Error:{0}", x.Errors.FirstOrDefault());
                 x.Errors.Count().should_be(0);
 
@@ -162,7 +162,7 @@ namespace TestValidation
                     ContactId = contact.Id,
                     SalesDate = DateTime.Now,
                 };
-                x = _salesOrderService.CreateObject(x);
+                x = _salesOrderService.CreateObject(x, _contactService);
                 if (x.Errors.Count() > 0) Console.WriteLine("x.Error:{0}", x.Errors.FirstOrDefault());
                 x.Errors.Count().should_be(0);
 

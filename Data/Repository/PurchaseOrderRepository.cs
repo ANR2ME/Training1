@@ -60,13 +60,18 @@ namespace Data.Repository
 
         public PurchaseOrder ConfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockMutationService _stockMutationService, IItemService _itemService)
         {
-            purchaseOrder.IsConfirmed = true;
-            purchaseOrder.ConfirmationDate = DateTime.Now;
-            Update(purchaseOrder);
             IList<PurchaseOrderDetail> purchaseOrderDetails = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
+            int unconfirmed = 0;
             foreach (var pod in purchaseOrderDetails)
             {
                 _purchaseOrderDetailService.ConfirmObject(pod, _stockMutationService, _itemService);
+                if (!pod.IsConfirmed) unconfirmed++;
+            }
+            if (unconfirmed == 0)
+            {
+                purchaseOrder.IsConfirmed = true;
+                purchaseOrder.ConfirmationDate = DateTime.Now;
+                Update(purchaseOrder);
             }
             return purchaseOrder;
         }

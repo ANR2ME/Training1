@@ -57,14 +57,13 @@ namespace Data.Repository
         public PurchaseReceival ConfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IStockMutationService _stockMutationService, IItemService _itemService, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
             IList<PurchaseReceivalDetail> purchaseReceivalDetails = _purchaseReceivalDetailService.GetObjectsByPurchaseReceivalId(purchaseReceival.Id);
-            int Confirmed = 0;
+            int unconfirmed = 0;
             foreach (var prd in purchaseReceivalDetails)
             {
-                if (prd.IsConfirmed) Confirmed--; // Already Confirmed
                 _purchaseReceivalDetailService.ConfirmObject(prd, _stockMutationService, _itemService, _purchaseOrderDetailService);
-                if (prd.IsConfirmed) Confirmed++; // Newly Confirmed
+                if (!prd.IsConfirmed) unconfirmed++;
             }
-            if (Confirmed > 0)
+            if (unconfirmed == 0)
             {
                 purchaseReceival.IsConfirmed = true;
                 purchaseReceival.ConfirmationDate = DateTime.Now;

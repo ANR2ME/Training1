@@ -30,6 +30,11 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IList<PurchaseReceivalDetail> GetObjectsByItemId(int ItemId)
+        {
+            return _repository.GetObjectsByItemId(ItemId);
+        }
+
         public IList<PurchaseReceivalDetail> GetObjectsByPurchaseReceivalId(int PurchaseReceivalId)
         {
             return _repository.GetObjectsByPurchaseReceivalId(PurchaseReceivalId);
@@ -50,16 +55,16 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public PurchaseReceivalDetail CreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        public PurchaseReceivalDetail CreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService, IItemService _itemService, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
             purchaseReceivalDetail.Errors = new Dictionary<String, String>();
             PurchaseReceival sa = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
-            return (purchaseReceivalDetail = _validator.ValidCreateObject(purchaseReceivalDetail, this, _purchaseOrderDetailService) ? _repository.CreateObject(purchaseReceivalDetail, sa.Code) : purchaseReceivalDetail);
+            return (purchaseReceivalDetail = _validator.ValidCreateObject(purchaseReceivalDetail, this, _purchaseReceivalService, _itemService, _purchaseOrderDetailService) ? _repository.CreateObject(purchaseReceivalDetail, sa.Code) : purchaseReceivalDetail);
         }
 
-        public PurchaseReceivalDetail UpdateObject(PurchaseReceivalDetail purchaseReceivalDetail)
+        public PurchaseReceivalDetail UpdateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService, IItemService _itemService, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
-            return (purchaseReceivalDetail = _validator.ValidUpdateObject(purchaseReceivalDetail, this) ? _repository.UpdateObject(purchaseReceivalDetail) : purchaseReceivalDetail);
+            return (purchaseReceivalDetail = _validator.ValidUpdateObject(purchaseReceivalDetail, this, _purchaseReceivalService, _itemService, _purchaseOrderDetailService) ? _repository.UpdateObject(purchaseReceivalDetail) : purchaseReceivalDetail);
         }
 
         public PurchaseReceivalDetail SoftDeleteObject(PurchaseReceivalDetail purchaseReceivalDetail)

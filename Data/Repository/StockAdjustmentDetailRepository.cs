@@ -85,7 +85,7 @@ namespace Data.Repository
                 SourceDocumentDetailType = "StockAdjustmentDetail",
                 SourceDocumentDetailId = stockAdjustmentDetail.Id,
             };
-            _stockMutationService.CreateObject(sm);
+            _stockMutationService.CreateObject(sm, _itemService);
             _stockMutationService.StockMutateObject(sm, _itemService);
             stockAdjustmentDetail.IsConfirmed = true;
             stockAdjustmentDetail.ConfirmationDate = DateTime.Now;

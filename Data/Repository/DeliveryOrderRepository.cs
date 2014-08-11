@@ -57,14 +57,13 @@ namespace Data.Repository
         public DeliveryOrder ConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, IStockMutationService _stockMutationService, IItemService _itemService, ISalesOrderDetailService _salesOrderDetailService)
         {
             IList<DeliveryOrderDetail> deliveryOrderDetails = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
-            int Confirmed = 0;
+            int unconfirmed = 0;
             foreach (var prd in deliveryOrderDetails)
             {
-                if (prd.IsConfirmed) Confirmed--; // Already Confirmed
                 _deliveryOrderDetailService.ConfirmObject(prd, _stockMutationService, _itemService, _salesOrderDetailService);
-                if (prd.IsConfirmed) Confirmed++; // Newly Confirmed
+                if (!prd.IsConfirmed) unconfirmed++;
             }
-            if (Confirmed > 0)
+            if (unconfirmed == 0)
             {
                 deliveryOrder.IsConfirmed = true;
                 deliveryOrder.ConfirmationDate = DateTime.Now;

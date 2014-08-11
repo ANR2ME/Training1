@@ -11,19 +11,21 @@ namespace Validation.Validation
 {
     public class DeliveryOrderValidator : IDeliveryOrderValidator
     {
-        public DeliveryOrder VHasSalesOrder(DeliveryOrder deliveryOrder)
+        public DeliveryOrder VHasSalesOrder(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService)
         {
-            if (deliveryOrder.SalesOrderId <= 0)
+            SalesOrder so = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
+            if (so == null)
             {
                 deliveryOrder.Errors.Add("SalesOrder", "Harus ada");
             }
             return deliveryOrder;
         }
 
-        public DeliveryOrder VHasContact(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService)
+        public DeliveryOrder VHasContact(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IContactService _contactService)
         {
             SalesOrder so = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
-            if (so.ContactId <= 0)
+            Contact c = _contactService.GetObjectById(so.ContactId);
+            if (c == null)
             {
                 deliveryOrder.Errors.Add("Contact", "Harus ada");
             }
@@ -97,17 +99,18 @@ namespace Validation.Validation
             return deliveryOrder;
         }
 
-        public DeliveryOrder VCreateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService)
+        public DeliveryOrder VCreateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IContactService _contactService)
         {
-            VHasSalesOrder(deliveryOrder);
-            VHasContact(deliveryOrder, _salesOrderService);
+            VHasSalesOrder(deliveryOrder, _salesOrderService);
+            VHasContact(deliveryOrder, _salesOrderService, _contactService);
             VIsValidDeliveryDate(deliveryOrder);
             return deliveryOrder;
         }
 
-        public DeliveryOrder VUpdateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService)
+        public DeliveryOrder VUpdateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IContactService _contactService)
         {
-            VHasContact(deliveryOrder, _salesOrderService);
+            VHasSalesOrder(deliveryOrder, _salesOrderService);
+            VHasContact(deliveryOrder, _salesOrderService, _contactService);
             VIsValidDeliveryDate(deliveryOrder);
             VIsNotConfirmed(deliveryOrder);
             return deliveryOrder;
@@ -135,16 +138,16 @@ namespace Validation.Validation
             return deliveryOrder;
         }
 
-        public bool ValidCreateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService)
+        public bool ValidCreateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IContactService _contactService)
         {
-            VCreateObject(deliveryOrder, _salesOrderService);
+            VCreateObject(deliveryOrder, _salesOrderService, _contactService);
             return isValid(deliveryOrder);
         }
 
-        public bool ValidUpdateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService)
+        public bool ValidUpdateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IContactService _contactService)
         {
             deliveryOrder.Errors.Clear();
-            VUpdateObject(deliveryOrder, _salesOrderService);
+            VUpdateObject(deliveryOrder, _salesOrderService, _contactService);
             return isValid(deliveryOrder);
         }
 

@@ -30,6 +30,11 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IList<DeliveryOrderDetail> GetObjectsByItemId(int ItemId)
+        {
+            return _repository.GetObjectsByItemId(ItemId);
+        }
+
         public IList<DeliveryOrderDetail> GetObjectsByDeliveryOrderId(int DeliveryOrderId)
         {
             return _repository.GetObjectsByDeliveryOrderId(DeliveryOrderId);
@@ -50,16 +55,16 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public DeliveryOrderDetail CreateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService)
+        public DeliveryOrderDetail CreateObject(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService)
         {
             deliveryOrderDetail.Errors = new Dictionary<String, String>();
             DeliveryOrder sa = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
-            return (deliveryOrderDetail = _validator.ValidCreateObject(deliveryOrderDetail, this, _salesOrderDetailService) ? _repository.CreateObject(deliveryOrderDetail, sa.Code) : deliveryOrderDetail);
+            return (deliveryOrderDetail = _validator.ValidCreateObject(deliveryOrderDetail, this, _itemService, _deliveryOrderService, _salesOrderDetailService) ? _repository.CreateObject(deliveryOrderDetail, sa.Code) : deliveryOrderDetail);
         }
 
-        public DeliveryOrderDetail UpdateObject(DeliveryOrderDetail deliveryOrderDetail)
+        public DeliveryOrderDetail UpdateObject(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService)
         {
-            return (deliveryOrderDetail = _validator.ValidUpdateObject(deliveryOrderDetail, this) ? _repository.UpdateObject(deliveryOrderDetail) : deliveryOrderDetail);
+            return (deliveryOrderDetail = _validator.ValidUpdateObject(deliveryOrderDetail, this, _itemService, _deliveryOrderService, _salesOrderDetailService) ? _repository.UpdateObject(deliveryOrderDetail) : deliveryOrderDetail);
         }
 
         public DeliveryOrderDetail SoftDeleteObject(DeliveryOrderDetail deliveryOrderDetail)

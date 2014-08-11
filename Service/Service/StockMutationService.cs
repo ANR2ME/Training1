@@ -45,10 +45,10 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public StockMutation CreateObject(StockMutation stockMutation)
+        public StockMutation CreateObject(StockMutation stockMutation, IItemService _itemService)
         {
             stockMutation.Errors = new Dictionary<String, String>();
-            if (_validator.ValidCreateObject(stockMutation))
+            if (_validator.ValidCreateObject(stockMutation, _itemService))
             {
                 return _repository.CreateObject(stockMutation);
             }
@@ -58,14 +58,14 @@ namespace Service.Service
             }
         }
 
-        public StockMutation CreateObject(int ItemId)
+        public StockMutation CreateObject(int ItemId, IItemService _itemService)
         {
             StockMutation stockMutation = new StockMutation()
             {
                 ItemId = ItemId,
                 
             };
-            return this.CreateObject(stockMutation);
+            return this.CreateObject(stockMutation, _itemService);
         }
 
         public StockMutation StockMutateObject(StockMutation stockMutation, IItemService _itemService)

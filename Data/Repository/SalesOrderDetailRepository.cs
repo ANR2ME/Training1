@@ -82,7 +82,7 @@ namespace Data.Repository
                 SourceDocumentDetailType = "SalesOrderDetail",
                 SourceDocumentDetailId = salesOrderDetail.Id,
             };
-            _stockMutationService.CreateObject(sm);
+            _stockMutationService.CreateObject(sm, _itemService);
             _stockMutationService.StockMutateObject(sm, _itemService);
             salesOrderDetail.IsConfirmed = true;
             salesOrderDetail.ConfirmationDate = DateTime.Now;

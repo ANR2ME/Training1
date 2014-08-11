@@ -10,7 +10,7 @@ namespace Core.Interface.Validation
 {
     public interface IPurchaseOrderValidator
     {
-        PurchaseOrder VHasContact(PurchaseOrder purchaseOrder);
+        PurchaseOrder VHasContact(PurchaseOrder purchaseOrder, IContactService _contactService);
         PurchaseOrder VIsValidPurchaseDate(PurchaseOrder purchaseOrder);
         PurchaseOrder VIsConfirmed(PurchaseOrder purchaseOrder);
         PurchaseOrder VIsNotConfirmed(PurchaseOrder purchaseOrder);
@@ -19,12 +19,12 @@ namespace Core.Interface.Validation
         //PurchaseOrder VIsValidPurchaseOrderDetailsQuantity(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IItemService _itemService);
         PurchaseOrder VConfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IItemService _itemService);
         PurchaseOrder VUnconfirmObject(PurchaseOrder purchaseOrder);
-        PurchaseOrder VCreateObject(PurchaseOrder purchaseOrder);
-        PurchaseOrder VUpdateObject(PurchaseOrder purchaseOrder);
+        PurchaseOrder VCreateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
+        PurchaseOrder VUpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
         PurchaseOrder VDeleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
 
-        bool ValidCreateObject(PurchaseOrder purchaseOrder);
-        bool ValidUpdateObject(PurchaseOrder purchaseOrder);
+        bool ValidCreateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
+        bool ValidUpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
         bool ValidDeleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
         bool ValidConfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IItemService _itemService);
         bool ValidUnconfirmObject(PurchaseOrder purchaseOrder);

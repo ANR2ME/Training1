@@ -15,8 +15,7 @@ namespace Data.Mapping
             HasKey(sm => sm.Id);
             HasRequired(sm => sm.Item)
                 .WithMany(i => i.StockMutations)
-                .HasForeignKey(sm => sm.ItemId)
-                .WillCascadeOnDelete(false);
+                .HasForeignKey(sm => sm.ItemId);
             Ignore(sm => sm.Errors);
         }
     }

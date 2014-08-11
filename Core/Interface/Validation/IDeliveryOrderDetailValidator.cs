@@ -10,9 +10,9 @@ namespace Core.Interface.Validation
 {
     public interface IDeliveryOrderDetailValidator
     {
-        DeliveryOrderDetail VHasDeliveryOrder(DeliveryOrderDetail deliveryOrderDetail);
-        DeliveryOrderDetail VHasItem(DeliveryOrderDetail deliveryOrderDetail);
-        DeliveryOrderDetail VHasSalesOrderDetail(DeliveryOrderDetail deliveryOrderDetail);
+        DeliveryOrderDetail VHasDeliveryOrder(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService);
+        DeliveryOrderDetail VHasItem(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService);
+        DeliveryOrderDetail VHasSalesOrderDetail(DeliveryOrderDetail deliveryOrderDetail, ISalesOrderDetailService _salesOrderDetailService);
         DeliveryOrderDetail VIsNotConfirmed(DeliveryOrderDetail deliveryOrderDetail);
         DeliveryOrderDetail VIsConfirmed(DeliveryOrderDetail deliveryOrderDetail);
         DeliveryOrderDetail VIsPositiveQuantity(DeliveryOrderDetail deliveryOrderDetail);
@@ -21,13 +21,13 @@ namespace Core.Interface.Validation
         DeliveryOrderDetail VIsItemUnique(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService);
         DeliveryOrderDetail VIsValidOrderQuantity(DeliveryOrderDetail deliveryOrderDetail, ISalesOrderDetailService _salesOrderDetailService);
         DeliveryOrderDetail VIsOrderDetailConfirmed(DeliveryOrderDetail deliveryOrderDetail, ISalesOrderDetailService _salesOrderDetailService);
-        DeliveryOrderDetail VCreateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesOrderDetailService _salesOrderDetailService);
-        DeliveryOrderDetail VUpdateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService);
+        DeliveryOrderDetail VCreateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService);
+        DeliveryOrderDetail VUpdateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService);
         DeliveryOrderDetail VDeleteObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService);
         DeliveryOrderDetail VUnconfirmObject(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService);
 
-        bool ValidCreateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesOrderDetailService _salesOrderDetailService);
-        bool ValidUpdateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService);
+        bool ValidCreateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService);
+        bool ValidUpdateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService);
         bool ValidDeleteObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService);
         bool ValidConfirmObject(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService, ISalesOrderDetailService _salesOrderDetailService);
         bool ValidUnconfirmObject(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService);

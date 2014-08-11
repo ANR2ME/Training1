@@ -30,6 +30,11 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IList<PurchaseOrderDetail> GetObjectsByItemId(int ItemId)
+        {
+            return _repository.GetObjectsByItemId(ItemId);
+        }
+
         public IList<PurchaseOrderDetail> GetObjectsByPurchaseOrderId(int PurchaseOrderId)
         {
             return _repository.GetObjectsByPurchaseOrderId(PurchaseOrderId);
@@ -45,16 +50,16 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public PurchaseOrderDetail CreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService)
+        public PurchaseOrderDetail CreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
         {
             purchaseOrderDetail.Errors = new Dictionary<String, String>();
             PurchaseOrder sa = _purchaseOrderService.GetObjectById(purchaseOrderDetail.PurchaseOrderId);
-            return (purchaseOrderDetail = _validator.ValidCreateObject(purchaseOrderDetail, this) ? _repository.CreateObject(purchaseOrderDetail, sa.Code) : purchaseOrderDetail);
+            return (purchaseOrderDetail = _validator.ValidCreateObject(purchaseOrderDetail, this, _purchaseOrderService, _itemService) ? _repository.CreateObject(purchaseOrderDetail, sa.Code) : purchaseOrderDetail);
         }
 
-        public PurchaseOrderDetail UpdateObject(PurchaseOrderDetail purchaseOrderDetail)
+        public PurchaseOrderDetail UpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
         {
-            return (purchaseOrderDetail = _validator.ValidUpdateObject(purchaseOrderDetail, this) ? _repository.UpdateObject(purchaseOrderDetail) : purchaseOrderDetail);
+            return (purchaseOrderDetail = _validator.ValidUpdateObject(purchaseOrderDetail, this, _purchaseOrderService, _itemService) ? _repository.UpdateObject(purchaseOrderDetail) : purchaseOrderDetail);
         }
 
         public PurchaseOrderDetail SoftDeleteObject(PurchaseOrderDetail purchaseOrderDetail)

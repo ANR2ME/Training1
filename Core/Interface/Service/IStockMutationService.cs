@@ -15,7 +15,7 @@ namespace Core.Interface.Service
         IList<StockMutation> GetObjectsByItemId(int ItemId);
         IList<StockMutation> GetObjectsByAllIds(int ItemId, int SourceDocumentDetailId, string SourceDocumentType);
         StockMutation GetObjectById(int Id);
-        StockMutation CreateObject(StockMutation stockMutation);
+        StockMutation CreateObject(StockMutation stockMutation, IItemService _itemService);
         StockMutation StockMutateObject(StockMutation stockMutation, IItemService _itemService);
         StockMutation ReverseStockMutateObject(StockMutation stockMutation, IItemService _itemService);
         StockMutation SoftDeleteObject(StockMutation stockMutation);

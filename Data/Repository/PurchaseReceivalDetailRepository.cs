@@ -87,7 +87,7 @@ namespace Data.Repository
                 SourceDocumentDetailType = "PurchaseReceivalDetail",
                 SourceDocumentDetailId = purchaseReceivalDetail.Id,
             };
-            _stockMutationService.CreateObject(sm);
+            _stockMutationService.CreateObject(sm, _itemService);
             _stockMutationService.StockMutateObject(sm, _itemService);
             StockMutation sm2 = new StockMutation()
             {
@@ -100,7 +100,7 @@ namespace Data.Repository
                 SourceDocumentDetailType = "PurchaseReceivalDetail",
                 SourceDocumentDetailId = purchaseReceivalDetail.Id,
             };
-            _stockMutationService.CreateObject(sm2);
+            _stockMutationService.CreateObject(sm2, _itemService);
             _stockMutationService.StockMutateObject(sm2, _itemService);
             purchaseReceivalDetail.IsConfirmed = true;
             purchaseReceivalDetail.ConfirmationDate = DateTime.Now;

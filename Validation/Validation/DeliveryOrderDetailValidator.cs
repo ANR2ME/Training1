@@ -11,27 +11,30 @@ namespace Validation.Validation
 {
     public class DeliveryOrderDetailValidator : IDeliveryOrderDetailValidator
     {
-        public DeliveryOrderDetail VHasDeliveryOrder(DeliveryOrderDetail deliveryOrderDetail)
+        public DeliveryOrderDetail VHasDeliveryOrder(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService)
         {
-            if (deliveryOrderDetail.DeliveryOrderId <= 0)
+            DeliveryOrder dor = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
+            if (dor == null)
             {
                 deliveryOrderDetail.Errors.Add("DeliveryOrder", "Harus Ada");
             }
             return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VHasItem(DeliveryOrderDetail deliveryOrderDetail)
+        public DeliveryOrderDetail VHasItem(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService)
         {
-            if (deliveryOrderDetail.ItemId <= 0)
+            Item i = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
+            if (i == null)
             {
                 deliveryOrderDetail.Errors.Add("Item", "Harus Ada");
             }
             return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VHasSalesOrderDetail(DeliveryOrderDetail deliveryOrderDetail)
+        public DeliveryOrderDetail VHasSalesOrderDetail(DeliveryOrderDetail deliveryOrderDetail, ISalesOrderDetailService _salesOrderDetailService)
         {
-            if (deliveryOrderDetail.SalesOrderDetailId <= 0)
+            SalesOrderDetail sod = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
+            if (sod == null)
             {
                 deliveryOrderDetail.Errors.Add("SalesOrderDetail", "Harus Ada");
             }
@@ -68,7 +71,7 @@ namespace Validation.Validation
         public DeliveryOrderDetail VIsQuantityValid(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService)
         {
             Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
-            if (item.Quantity < deliveryOrderDetail.Quantity)
+            if (item == null || item.Quantity < deliveryOrderDetail.Quantity)
             {
                 deliveryOrderDetail.Errors.Add("Item Ready", "Harus lebih besar atau sama dengan Quantity");
             }
@@ -77,17 +80,13 @@ namespace Validation.Validation
 
         public DeliveryOrderDetail VIsItemUnique(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService)
         {
-            IList<DeliveryOrderDetail> deliveryOrderDetails = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrderDetail.DeliveryOrderId);
-            bool unique = true;
-            foreach (var sad in deliveryOrderDetails)
+            IList<DeliveryOrderDetail> deliveryOrderDetails = _deliveryOrderDetailService.GetObjectsByItemId(deliveryOrderDetail.ItemId);
+            int same = 0;
+            foreach (var d in deliveryOrderDetails)
             {
-                if (sad.ItemId == deliveryOrderDetail.ItemId && sad.Id != deliveryOrderDetail.Id && !sad.IsDeleted)
-                {
-                    unique = false;
-                    break;
-                }
+                if (d.ItemId == deliveryOrderDetail.ItemId && d.DeliveryOrderId == deliveryOrderDetail.DeliveryOrderId && !d.IsDeleted) same++;
             }
-            if (!unique)
+            if (same > 0)
             {
                 deliveryOrderDetail.Errors.Add("Item", "Harus unik");
             }
@@ -97,7 +96,7 @@ namespace Validation.Validation
         public DeliveryOrderDetail VIsValidOrderQuantity(DeliveryOrderDetail deliveryOrderDetail, ISalesOrderDetailService _salesOrderDetailService)
         {
             SalesOrderDetail x = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
-            if (deliveryOrderDetail.Quantity > x.Quantity)
+            if (x == null || deliveryOrderDetail.Quantity > x.Quantity)
             {
                 deliveryOrderDetail.Errors.Add("Quantity", "Harus lebih kecil atau sama dengan SalesOrderDetail Quantity");
             }
@@ -107,29 +106,29 @@ namespace Validation.Validation
         public DeliveryOrderDetail VIsOrderDetailConfirmed(DeliveryOrderDetail deliveryOrderDetail, ISalesOrderDetailService _salesOrderDetailService)
         {
             SalesOrderDetail x = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
-            if (!x.IsConfirmed)
+            if (x == null || !x.IsConfirmed)
             {
                 deliveryOrderDetail.Errors.Add("SalesOrderDetail", "Harus Terkonfirmasi");
             }
             return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VCreateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesOrderDetailService _salesOrderDetailService)
+        public DeliveryOrderDetail VCreateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService)
         {
-            VHasDeliveryOrder(deliveryOrderDetail);
-            VHasItem(deliveryOrderDetail);
-            VHasSalesOrderDetail(deliveryOrderDetail);
+            VHasDeliveryOrder(deliveryOrderDetail, _deliveryOrderService);
+            VHasItem(deliveryOrderDetail, _itemService);
+            VHasSalesOrderDetail(deliveryOrderDetail, _salesOrderDetailService);
             VIsPositiveQuantity(deliveryOrderDetail);
             VIsItemUnique(deliveryOrderDetail, _deliveryOrderDetailService);
             VIsValidOrderQuantity(deliveryOrderDetail, _salesOrderDetailService);
             return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VUpdateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService)
+        public DeliveryOrderDetail VUpdateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService)
         {
-            VHasDeliveryOrder(deliveryOrderDetail);
-            VHasItem(deliveryOrderDetail);
-            VHasSalesOrderDetail(deliveryOrderDetail);
+            VHasDeliveryOrder(deliveryOrderDetail, _deliveryOrderService);
+            VHasItem(deliveryOrderDetail, _itemService);
+            VHasSalesOrderDetail(deliveryOrderDetail, _salesOrderDetailService);
             VIsPositiveQuantity(deliveryOrderDetail);
             VIsItemUnique(deliveryOrderDetail, _deliveryOrderDetailService);
             VIsNotConfirmed(deliveryOrderDetail);
@@ -163,16 +162,16 @@ namespace Validation.Validation
             return deliveryOrderDetail;
         }
 
-        public bool ValidCreateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesOrderDetailService _salesOrderDetailService)
+        public bool ValidCreateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService)
         {
-            VCreateObject(deliveryOrderDetail, _deliveryOrderDetailService, _salesOrderDetailService);
+            VCreateObject(deliveryOrderDetail, _deliveryOrderDetailService, _itemService, _deliveryOrderService, _salesOrderDetailService);
             return isValid(deliveryOrderDetail);
         }
 
-        public bool ValidUpdateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService)
+        public bool ValidUpdateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService)
         {
             deliveryOrderDetail.Errors.Clear();
-            VUpdateObject(deliveryOrderDetail, _deliveryOrderDetailService);
+            VUpdateObject(deliveryOrderDetail, _deliveryOrderDetailService, _itemService, _deliveryOrderService, _salesOrderDetailService);
             return isValid(deliveryOrderDetail);
         }
 

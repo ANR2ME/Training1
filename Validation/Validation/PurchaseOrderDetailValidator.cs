@@ -11,18 +11,20 @@ namespace Validation.Validation
 {
     public class PurchaseOrderDetailValidator : IPurchaseOrderDetailValidator
     {
-        public PurchaseOrderDetail VHasPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail)
+        public PurchaseOrderDetail VHasPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService)
         {
-            if (purchaseOrderDetail.PurchaseOrderId <= 0)
+            PurchaseOrder po = _purchaseOrderService.GetObjectById(purchaseOrderDetail.PurchaseOrderId);
+            if (po == null)
             {
                 purchaseOrderDetail.Errors.Add("PurchaseOrder", "Harus Ada");
             }
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VHasItem(PurchaseOrderDetail purchaseOrderDetail)
+        public PurchaseOrderDetail VHasItem(PurchaseOrderDetail purchaseOrderDetail, IItemService _itemService)
         {
-            if (purchaseOrderDetail.ItemId <= 0)
+            Item i = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
+            if (i == null)
             {
                 purchaseOrderDetail.Errors.Add("Item", "Harus Ada");
             }
@@ -50,7 +52,7 @@ namespace Validation.Validation
         public PurchaseOrderDetail VIsUnconfirmQuantityValid(PurchaseOrderDetail purchaseOrderDetail, IItemService _itemService)
         {
             Item item = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
-            if (item.PendingReceival < purchaseOrderDetail.Quantity)
+            if (item == null || item.PendingReceival < purchaseOrderDetail.Quantity)
             {
                 purchaseOrderDetail.Errors.Add("Item PendingReceival", "Harus lebih besar atau sama dengan Quantity");
             }
@@ -59,17 +61,13 @@ namespace Validation.Validation
 
         public PurchaseOrderDetail VIsItemUnique(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
-            IList<PurchaseOrderDetail> purchaseOrderDetails = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrderDetail.PurchaseOrderId);
-            bool unique = true;
-            foreach (var sad in purchaseOrderDetails)
+            IList<PurchaseOrderDetail> purchaseOrderDetails = _purchaseOrderDetailService.GetObjectsByItemId(purchaseOrderDetail.ItemId);
+            int same = 0;
+            foreach (var d in purchaseOrderDetails)
             {
-                if (sad.ItemId == purchaseOrderDetail.ItemId && sad.Id != purchaseOrderDetail.Id && !sad.IsDeleted)
-                {
-                    unique = false;
-                    break;
-                }
+                if (d.ItemId == purchaseOrderDetail.ItemId && d.PurchaseOrderId == purchaseOrderDetail.PurchaseOrderId && !d.IsDeleted) same++;
             }
-            if (!unique)
+            if (same > 0)
             {
                 purchaseOrderDetail.Errors.Add("Item", "Harus unik");
             }
@@ -86,20 +84,20 @@ namespace Validation.Validation
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VCreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        public PurchaseOrderDetail VCreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
         {
 
-            VHasPurchaseOrder(purchaseOrderDetail);
-            VHasItem(purchaseOrderDetail);
+            VHasPurchaseOrder(purchaseOrderDetail, _purchaseOrderService);
+            VHasItem(purchaseOrderDetail, _itemService);
             VIsPositiveQuantity(purchaseOrderDetail);
             VIsItemUnique(purchaseOrderDetail, _purchaseOrderDetailService);
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VUpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        public PurchaseOrderDetail VUpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
         {
-            VHasPurchaseOrder(purchaseOrderDetail);
-            VHasItem(purchaseOrderDetail);
+            VHasPurchaseOrder(purchaseOrderDetail, _purchaseOrderService);
+            VHasItem(purchaseOrderDetail, _itemService);
             VIsPositiveQuantity(purchaseOrderDetail);
             VIsItemUnique(purchaseOrderDetail, _purchaseOrderDetailService);
             VIsNotConfirmed(purchaseOrderDetail);
@@ -132,16 +130,16 @@ namespace Validation.Validation
             return purchaseOrderDetail;
         }
 
-        public bool ValidCreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        public bool ValidCreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
         {
-            VCreateObject(purchaseOrderDetail, _purchaseOrderDetailService);
+            VCreateObject(purchaseOrderDetail, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
             return isValid(purchaseOrderDetail);
         }
 
-        public bool ValidUpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        public bool ValidUpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
         {
             purchaseOrderDetail.Errors.Clear();
-            VUpdateObject(purchaseOrderDetail, _purchaseOrderDetailService);
+            VUpdateObject(purchaseOrderDetail, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
             return isValid(purchaseOrderDetail);
         }
 

@@ -11,9 +11,10 @@ namespace Validation.Validation
 {
     public class PurchaseOrderValidator : IPurchaseOrderValidator
     {
-        public PurchaseOrder VHasContact (PurchaseOrder purchaseOrder)
+        public PurchaseOrder VHasContact (PurchaseOrder purchaseOrder, IContactService _contactService)
         {
-            if (purchaseOrder.ContactId <= 0)
+            Contact c = _contactService.GetObjectById(purchaseOrder.ContactId);
+            if (c == null)
             {
                 purchaseOrder.Errors.Add("Contact", "Harus ada");
             }
@@ -22,7 +23,7 @@ namespace Validation.Validation
 
         public PurchaseOrder VIsValidPurchaseDate(PurchaseOrder purchaseOrder)
         {
-            if (purchaseOrder.PurchaseDate == null)
+            if (purchaseOrder.PurchaseDate == null || purchaseOrder.PurchaseDate.Equals(DateTime.FromBinary(0)))
             {
                 purchaseOrder.Errors.Add("PurchaseDate", "Tidak Valid");
             }
@@ -67,16 +68,16 @@ namespace Validation.Validation
             return purchaseOrder;
         }
 
-        public PurchaseOrder VCreateObject(PurchaseOrder purchaseOrder)
+        public PurchaseOrder VCreateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
         {
-            VHasContact(purchaseOrder);
+            VHasContact(purchaseOrder, _contactService);
             VIsValidPurchaseDate(purchaseOrder);
             return purchaseOrder;
         }
 
-        public PurchaseOrder VUpdateObject(PurchaseOrder purchaseOrder)
+        public PurchaseOrder VUpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
         {
-            VHasContact(purchaseOrder);
+            VHasContact(purchaseOrder, _contactService);
             VIsValidPurchaseDate(purchaseOrder);
             VIsNotConfirmed(purchaseOrder);
             return purchaseOrder;
@@ -102,16 +103,16 @@ namespace Validation.Validation
             return purchaseOrder;
         }
 
-        public bool ValidCreateObject(PurchaseOrder purchaseOrder)
+        public bool ValidCreateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
         {
-            VCreateObject(purchaseOrder);
+            VCreateObject(purchaseOrder, _contactService);
             return isValid(purchaseOrder);
         }
 
-        public bool ValidUpdateObject(PurchaseOrder purchaseOrder)
+        public bool ValidUpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
         {
             purchaseOrder.Errors.Clear();
-            VUpdateObject(purchaseOrder);
+            VUpdateObject(purchaseOrder, _contactService);
             return isValid(purchaseOrder);
         }
 

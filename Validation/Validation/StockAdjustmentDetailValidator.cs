@@ -11,18 +11,20 @@ namespace Validation.Validation
 {
     public class StockAdjustmentDetailValidator : IStockAdjustmentDetailValidator
     {
-        public StockAdjustmentDetail VHasStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail)
+        public StockAdjustmentDetail VHasStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService)
         {
-            if (stockAdjustmentDetail.StockAdjustmentId <= 0)
+            StockAdjustment sa = _stockAdjustmentService.GetObjectById(stockAdjustmentDetail.StockAdjustmentId);
+            if (sa == null)
             {
                 stockAdjustmentDetail.Errors.Add("StockAdjustment", "Harus Ada");
             }
             return stockAdjustmentDetail;
         }
 
-        public StockAdjustmentDetail VHasItem(StockAdjustmentDetail stockAdjustmentDetail)
+        public StockAdjustmentDetail VHasItem(StockAdjustmentDetail stockAdjustmentDetail, IItemService _itemService)
         {
-            if (stockAdjustmentDetail.ItemId <= 0)
+            Item i = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
+            if (i == null)
             {
                 stockAdjustmentDetail.Errors.Add("Item", "Harus Ada");
             }
@@ -50,7 +52,7 @@ namespace Validation.Validation
         public StockAdjustmentDetail VIsConfirmQuantityValid(StockAdjustmentDetail stockAdjustmentDetail, IItemService _itemService)
         {
             Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
-            if (stockAdjustmentDetail.Quantity + item.Quantity < 0)
+            if (item == null || stockAdjustmentDetail.Quantity + item.Quantity < 0)
             {
                 stockAdjustmentDetail.Errors.Add("Quantity + Item Quantity", "Harus lebih besar atau sama dengan 0");
             }
@@ -60,7 +62,7 @@ namespace Validation.Validation
         public StockAdjustmentDetail VIsUnconfirmQuantityValid(StockAdjustmentDetail stockAdjustmentDetail, IItemService _itemService)
         {
             Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
-            if (item.Quantity - stockAdjustmentDetail.Quantity < 0)
+            if (item == null || item.Quantity - stockAdjustmentDetail.Quantity < 0)
             {
                 stockAdjustmentDetail.Errors.Add("Item Quantity - Quantity", "Harus lebih besar atau sama dengan 0");
             }
@@ -69,37 +71,33 @@ namespace Validation.Validation
 
         public StockAdjustmentDetail VIsItemUnique(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentDetailService _stockAdjustmentDetailService)
         {
-            IList<StockAdjustmentDetail> stockAdjustmentDetails = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustmentDetail.StockAdjustmentId);
-            bool unique = true;
-            foreach (var sad in stockAdjustmentDetails)
+            IList<StockAdjustmentDetail> stockAdjustmentDetails = _stockAdjustmentDetailService.GetObjectsByItemId(stockAdjustmentDetail.ItemId);
+            int same = 0;
+            foreach (var d in stockAdjustmentDetails)
             {
-                if (sad.ItemId == stockAdjustmentDetail.ItemId && sad.Id != stockAdjustmentDetail.Id && !sad.IsDeleted)
-                {
-                    unique = false;
-                    break;
-                }
+                if (d.ItemId == stockAdjustmentDetail.ItemId && d.StockAdjustmentId == stockAdjustmentDetail.StockAdjustmentId && !d.IsDeleted) same++;
             }
-            if (!unique)
+            if (same > 0)
             {
                 stockAdjustmentDetail.Errors.Add("Item", "Harus unik");
             }
             return stockAdjustmentDetail;
         }
 
-        public StockAdjustmentDetail VCreateObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentDetailService _stockAdjustmentDetailService)
+        public StockAdjustmentDetail VCreateObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentDetailService _stockAdjustmentDetailService, IStockAdjustmentService _stockAdjustmentService, IItemService _itemService)
         {
 
-            VHasStockAdjustment(stockAdjustmentDetail);
-            VHasItem(stockAdjustmentDetail);
+            VHasStockAdjustment(stockAdjustmentDetail, _stockAdjustmentService);
+            VHasItem(stockAdjustmentDetail, _itemService);
             VIsNotZeroQuantity(stockAdjustmentDetail);
             VIsItemUnique(stockAdjustmentDetail, _stockAdjustmentDetailService);
             return stockAdjustmentDetail;
         }
 
-        public StockAdjustmentDetail VUpdateObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentDetailService _stockAdjustmentDetailService)
+        public StockAdjustmentDetail VUpdateObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentDetailService _stockAdjustmentDetailService, IStockAdjustmentService _stockAdjustmentService, IItemService _itemService)
         {
-            VHasStockAdjustment(stockAdjustmentDetail);
-            VHasItem(stockAdjustmentDetail);
+            VHasStockAdjustment(stockAdjustmentDetail, _stockAdjustmentService);
+            VHasItem(stockAdjustmentDetail, _itemService);
             VIsNotZeroQuantity(stockAdjustmentDetail);
             VIsItemUnique(stockAdjustmentDetail, _stockAdjustmentDetailService);
             VIsNotConfirmed(stockAdjustmentDetail);
@@ -124,16 +122,16 @@ namespace Validation.Validation
             return stockAdjustmentDetail;
         }
 
-        public bool ValidCreateObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentDetailService _stockAdjustmentDetailService)
+        public bool ValidCreateObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentDetailService _stockAdjustmentDetailService, IStockAdjustmentService _stockAdjustmentService, IItemService _itemService)
         {
-            VCreateObject(stockAdjustmentDetail, _stockAdjustmentDetailService);
+            VCreateObject(stockAdjustmentDetail, _stockAdjustmentDetailService, _stockAdjustmentService, _itemService);
             return isValid(stockAdjustmentDetail);
         }
 
-        public bool ValidUpdateObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentDetailService _stockAdjustmentDetailService)
+        public bool ValidUpdateObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentDetailService _stockAdjustmentDetailService, IStockAdjustmentService _stockAdjustmentService, IItemService _itemService)
         {
             stockAdjustmentDetail.Errors.Clear();
-            VUpdateObject(stockAdjustmentDetail, _stockAdjustmentDetailService);
+            VUpdateObject(stockAdjustmentDetail, _stockAdjustmentDetailService, _stockAdjustmentService, _itemService);
             return isValid(stockAdjustmentDetail);
         }
 

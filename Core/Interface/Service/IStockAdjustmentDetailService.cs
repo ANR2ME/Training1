@@ -12,11 +12,12 @@ namespace Core.Interface.Service
     {
         IStockAdjustmentDetailValidator GetValidator();
         IList<StockAdjustmentDetail> GetAll();
+        IList<StockAdjustmentDetail> GetObjectsByItemId(int ItemId);
         IList<StockAdjustmentDetail> GetObjectsByStockAdjustmentId(int StockAdjustmentId);
         IList<StockAdjustmentDetail> GetConfirmedObjectsByStockAdjustmentId(int StockAdjustmentId);
         StockAdjustmentDetail GetObjectById(int Id);
-        StockAdjustmentDetail CreateObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService);
-        StockAdjustmentDetail UpdateObject(StockAdjustmentDetail stockAdjustmentDetail);
+        StockAdjustmentDetail CreateObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IItemService _itemService);
+        StockAdjustmentDetail UpdateObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IItemService _itemService);
         StockAdjustmentDetail SoftDeleteObject(StockAdjustmentDetail stockAdjustmentDetail);
         StockAdjustmentDetail ConfirmObject(StockAdjustmentDetail stockAdjustmentDetail, IStockMutationService _stockMutationService, IItemService _itemService);
         StockAdjustmentDetail UnconfirmObject(StockAdjustmentDetail stockAdjustmentDetail, IStockMutationService _stockMutationService, IItemService _itemService);

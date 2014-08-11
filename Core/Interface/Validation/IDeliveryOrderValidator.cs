@@ -10,8 +10,8 @@ namespace Core.Interface.Validation
 {
     public interface IDeliveryOrderValidator
     {
-        DeliveryOrder VHasSalesOrder(DeliveryOrder deliveryOrder);
-        DeliveryOrder VHasContact(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService);
+        DeliveryOrder VHasSalesOrder(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService);
+        DeliveryOrder VHasContact(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IContactService _contactService);
         DeliveryOrder VIsValidDeliveryDate(DeliveryOrder deliveryOrder);
         DeliveryOrder VIsConfirmed(DeliveryOrder deliveryOrder);
         DeliveryOrder VIsNotConfirmed(DeliveryOrder deliveryOrder);
@@ -20,12 +20,12 @@ namespace Core.Interface.Validation
         DeliveryOrder VIsValidDeliveryOrderDetailsQuantity(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService);
         DeliveryOrder VConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService);
         DeliveryOrder VUnconfirmObject(DeliveryOrder deliveryOrder);
-        DeliveryOrder VCreateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService);
-        DeliveryOrder VUpdateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService);
+        DeliveryOrder VCreateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IContactService _contactService);
+        DeliveryOrder VUpdateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IContactService _contactService);
         DeliveryOrder VDeleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService);
 
-        bool ValidCreateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService);
-        bool ValidUpdateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService);
+        bool ValidCreateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IContactService _contactService);
+        bool ValidUpdateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IContactService _contactService);
         bool ValidDeleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService);
         bool ValidConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService);
         bool ValidUnconfirmObject(DeliveryOrder deliveryOrder);

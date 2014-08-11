@@ -12,11 +12,12 @@ namespace Core.Interface.Service
     {
         IPurchaseOrderDetailValidator GetValidator();
         IList<PurchaseOrderDetail> GetAll();
+        IList<PurchaseOrderDetail> GetObjectsByItemId(int ItemId);
         IList<PurchaseOrderDetail> GetObjectsByPurchaseOrderId(int PurchaseOrderId);
         IList<PurchaseOrderDetail> GetConfirmedObjectsByPurchaseOrderId(int PurchaseOrderId);
         PurchaseOrderDetail GetObjectById(int Id);
-        PurchaseOrderDetail CreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService);
-        PurchaseOrderDetail UpdateObject(PurchaseOrderDetail purchaseOrderDetail);
+        PurchaseOrderDetail CreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService, IItemService _itemService);
+        PurchaseOrderDetail UpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService, IItemService _itemService);
         PurchaseOrderDetail SoftDeleteObject(PurchaseOrderDetail purchaseOrderDetail);
         PurchaseOrderDetail ConfirmObject(PurchaseOrderDetail purchaseOrderDetail, IStockMutationService _stockMutationService, IItemService _itemService);
         PurchaseOrderDetail UnconfirmObject(PurchaseOrderDetail purchaseOrderDetail, IStockMutationService _stockMutationService, IItemService _itemService, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
