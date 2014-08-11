@@ -24,8 +24,15 @@ namespace Validation.Validation
         public DeliveryOrder VHasContact(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IContactService _contactService)
         {
             SalesOrder so = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
-            Contact c = _contactService.GetObjectById(so.ContactId);
-            if (c == null)
+            if (so != null)
+            {
+                Contact c = _contactService.GetObjectById(so.ContactId);
+                if (c == null)
+                {
+                    deliveryOrder.Errors.Add("Contact", "Harus ada");
+                }
+            }
+            else
             {
                 deliveryOrder.Errors.Add("Contact", "Harus ada");
             }
@@ -34,7 +41,7 @@ namespace Validation.Validation
 
         public DeliveryOrder VIsValidDeliveryDate(DeliveryOrder deliveryOrder)
         {
-            if (deliveryOrder.DeliveryDate == null)
+            if (deliveryOrder.DeliveryDate == null || deliveryOrder.DeliveryDate.Equals(DateTime.FromBinary(0)))
             {
                 deliveryOrder.Errors.Add("DeliveryDate", "Tidak Valid");
             }

@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SpecContact.cs" />
+    <Compile Include="SpecDeliveryOrder.cs" />
     <Compile Include="SpecItem.cs" />
     <Compile Include="DebuggerShim.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

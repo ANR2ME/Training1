@@ -140,20 +140,22 @@ namespace TestValidation
         * STEPS:
         * 1.    create_salesorder_with_no_contact
         * 2.    create_salesorder_with_no_salesdate
-        * 3a.   create_valid_salesorder
-        * 3b.   update_salesorder_with_no_contact
-        * 3c.   update_valid_salesorder
-        * 3d.       confirm_salesorder_with_no_salesorderdetails
-        * 3e.       delete_unconfirmed_salesorder
-        * 3f.       delete_confirmed_salesorder
-        * 3g.       create_salesorderdetail_with_no_item
-        * 3h.       create_salesorderdetail_with_no_salesorder
-        * 3i.       create_salesorderdetail_with_no_quantity
-        * 3j.       create_salesorderdetail_with_same_item
-        * 3k1.      create_valid_salesorderdetail
-        * 3k2.          confirm_salesorder_with_invalid_salesorderdetails_quantity
-        * 3k3.          confirm_unconfirmed_salesorder
-        * 3k4.          confirm_confirmed_salesorder
+        * 3.    create_valid_salesorder
+        * 4.    update_salesorder_with_no_contact
+        * 5.    update_valid_salesorder
+        * 6.    confirm_salesorder_with_no_salesorderdetails
+        * 7.    delete_unconfirmed_salesorder
+        * 8.    delete_confirmed_salesorder
+        * 9a.       create_salesorderdetail_with_no_item
+        * 9b.       create_salesorderdetail_with_no_salesorder
+        * 9c.       create_salesorderdetail_with_no_quantity
+        * 9d.       create_salesorderdetail_with_same_item
+        * 9e.       create_valid_salesorderdetail
+        * 3f1.          confirm_salesorder_with_invalid_salesorderdetails_quantity
+        * 3f2.          confirm_valid_salesorder
+        * 3f3.          unconfirm_valid_salesorderdetail
+        * 3f4.          delete_confirmed_salesorderdetail
+        * 3f5.          delete_unconfirmed_salesorderdetail 
         */
         void salesorder_validation()
         {
@@ -263,12 +265,6 @@ namespace TestValidation
                 {
                     _salesOrderDetailService.CreateObject(valid_anak1, _salesOrderService, _itemService);
                     valid_anak1.Errors.Count().should_be(0);
-                    valid_anak1.ItemId.should_be(item.Id);
-                    //valid_anak1.SalesOrderId.should_be(valid_induk1.Id);
-                    //valid_anak1.Quantity.should_be(jumlah1);
-                    valid_anak1.CreatedAt.should_not_be(null);
-                    valid_anak1.IsConfirmed.should_be_false();
-                    valid_anak1.IsDeleted.should_be_false();
                     valid_anak1.Code.should_not_be_empty();
                 };
 
@@ -290,7 +286,7 @@ namespace TestValidation
                         valid_induk2.IsConfirmed.should_be_false();
                     };
 
-                    it["confirm_unconfirmed_salesorder"] = () =>
+                    it["confirm_valid_salesorder"] = () =>
                     {
                         _salesOrderService.ConfirmObject(valid_induk1, _salesOrderDetailService, _stockMutationService, _itemService);
                         Item i = _itemService.GetObjectById(valid_anak1.ItemId);
@@ -300,14 +296,14 @@ namespace TestValidation
                         foreach (var sm in sms)
                         {
                             sm.Status.should_be("Addition");
-                            sm.Quantity.should_be(i.PendingDelivery);
+                            sm.Quantity.should_be(valid_anak1.Quantity);
                         }
                         valid_induk1.Errors.Count().should_be(0);
                         valid_induk1.IsConfirmed.should_be_true();
                         valid_induk1.ConfirmationDate.should_not_be(null);
                     };
 
-                    it["unconfirm_confirmed_salesorderdetail"] = () =>
+                    it["unconfirm_valid_salesorderdetail"] = () =>
                     {
                         _salesOrderService.ConfirmObject(valid_induk1, _salesOrderDetailService, _stockMutationService, _itemService);
                         valid_anak1.IsConfirmed.should_be_true();

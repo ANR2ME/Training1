@@ -24,8 +24,15 @@ namespace Validation.Validation
         public PurchaseReceival VHasContact(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService, IContactService _contactService)
         {
             PurchaseOrder po = _purchaseOrderService.GetObjectById(purchaseReceival.PurchaseOrderId);
-            Contact c = _contactService.GetObjectById(po.ContactId);
-            if (c == null)
+            if (po != null)
+            {
+                Contact c = _contactService.GetObjectById(po.ContactId);
+                if (c == null)
+                {
+                    purchaseReceival.Errors.Add("Contact", "Harus ada");
+                }
+            }
+            else
             {
                 purchaseReceival.Errors.Add("Contact", "Harus ada");
             }
@@ -34,7 +41,7 @@ namespace Validation.Validation
 
         public PurchaseReceival VIsValidReceivalDate(PurchaseReceival purchaseReceival)
         {
-            if (purchaseReceival.ReceivalDate == null)
+            if (purchaseReceival.ReceivalDate == null || purchaseReceival.ReceivalDate.Equals(DateTime.FromBinary(0)))
             {
                 purchaseReceival.Errors.Add("ReceivalDate", "Tidak Valid");
             }

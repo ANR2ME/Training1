@@ -23,15 +23,18 @@ namespace StockControl
                 DateTime now;
                 Contact contact, contact2;
                 Item item;
-                SalesOrder valid_induk1, valid_induk2, invalid_induk1, invalid_induk2;
-                SalesOrderDetail valid_anak1, valid_anak2, invalid_anak1, invalid_anak2, invalid_anak3;
+                DeliveryOrder valid_induk1, valid_induk2, invalid_induk1, invalid_induk2;
+                DeliveryOrderDetail valid_anak1, valid_anak2, invalid_anak1, invalid_anak2, invalid_anak3, invalid_anak4;
+                SalesOrder valid_sinduk1;
+                SalesOrderDetail valid_sanak1;
 
                 IItemService _itemService;
                 IStockMutationService _stockMutationService;
                 IContactService _contactService;
-                ISalesOrderDetailService _salesOrderDetailService;
-                ISalesOrderService _salesOrderService;
+                IDeliveryOrderDetailService _deliveryOrderDetailService;
                 IDeliveryOrderService _deliveryOrderService;
+                ISalesOrderService _salesOrderService;
+                ISalesOrderDetailService _salesOrderDetailService;
 
                 db.DeleteAllTables();
                 _itemService = new ItemService(new ItemRepository(), new ItemValidator());
@@ -40,6 +43,7 @@ namespace StockControl
                 _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
                 _salesOrderService = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
                 _deliveryOrderService = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
+                _deliveryOrderDetailService = new DeliveryOrderDetailService(new DeliveryOrderDetailRepository(), new DeliveryOrderDetailValidator());
 
                 now = DateTime.Now;
                 jumlah1 = 30;
@@ -73,70 +77,100 @@ namespace StockControl
                 _itemService.CreateObject(item);
                 if (item.Errors.Count() > 0) Console.WriteLine("item.Error:{0}", item.Errors.FirstOrDefault());
 
-                valid_induk1 = new SalesOrder()
+                valid_sinduk1 = new SalesOrder()
                 {
                     ContactId = contact.Id,
                     SalesDate = now
                 };
-                _salesOrderService.CreateObject(valid_induk1, _contactService);
+                _salesOrderService.CreateObject(valid_sinduk1, _contactService);
 
-                valid_induk2 = new SalesOrder()
-                {
-                    ContactId = contact.Id,
-                    SalesDate = now
-                };
-                _salesOrderService.CreateObject(valid_induk2, _contactService);
-
-                invalid_induk1 = new SalesOrder()
-                {
-                    SalesDate = now
-                };
-                _salesOrderService.CreateObject(invalid_induk1, _contactService);
-
-                invalid_induk2 = new SalesOrder()
-                {
-                    ContactId = contact.Id
-                };
-                _salesOrderService.CreateObject(invalid_induk2, _contactService);
-
-                valid_anak1 = new SalesOrderDetail()
+                valid_sanak1 = new SalesOrderDetail()
                 {
                     ItemId = item.Id,
-                    SalesOrderId = valid_induk1.Id,
+                    SalesOrderId = valid_sinduk1.Id,
+                    Quantity = jumlah1
+                };
+                _salesOrderDetailService.CreateObject(valid_sanak1, _salesOrderService, _itemService);
+
+                valid_induk1 = new DeliveryOrder()
+                {
+                    SalesOrderId = valid_sinduk1.Id,
+                    DeliveryDate = now
+                };
+                _deliveryOrderService.CreateObject(valid_induk1, _salesOrderService, _contactService);
+
+                valid_induk2 = new DeliveryOrder()
+                {
+                    SalesOrderId = valid_sinduk1.Id,
+                    DeliveryDate = now
+                };
+                _deliveryOrderService.CreateObject(valid_induk2, _salesOrderService, _contactService);
+
+                invalid_induk1 = new DeliveryOrder()
+                {
+                    DeliveryDate = now
+                };
+                _deliveryOrderService.CreateObject(invalid_induk1, _salesOrderService, _contactService);
+
+                invalid_induk2 = new DeliveryOrder()
+                {
+                    SalesOrderId = valid_sinduk1.Id
+                };
+                _deliveryOrderService.CreateObject(invalid_induk2, _salesOrderService, _contactService);
+
+                valid_anak1 = new DeliveryOrderDetail()
+                {
+                    ItemId = item.Id,
+                    DeliveryOrderId = valid_induk1.Id,
+                    SalesOrderDetailId = valid_sanak1.Id,
                     Quantity = jumlah1
                 };
 
-                valid_anak2 = new SalesOrderDetail()
+                valid_anak2 = new DeliveryOrderDetail()
                 {
                     ItemId = item.Id,
-                    SalesOrderId = valid_induk2.Id,
+                    DeliveryOrderId = valid_induk2.Id,
+                    SalesOrderDetailId = valid_sanak1.Id,
                     Quantity = jumlah2
                 };
 
-                invalid_anak1 = new SalesOrderDetail()
+                invalid_anak1 = new DeliveryOrderDetail()
                 {
-                    SalesOrderId = valid_induk1.Id,
+                    DeliveryOrderId = valid_induk1.Id,
+                    SalesOrderDetailId = valid_sanak1.Id,
                     Quantity = jumlah1
                 };
 
-                invalid_anak2 = new SalesOrderDetail()
+                invalid_anak2 = new DeliveryOrderDetail()
                 {
                     ItemId = item.Id,
+                    SalesOrderDetailId = valid_sanak1.Id,
                     Quantity = jumlah1
                 };
 
-                invalid_anak3 = new SalesOrderDetail()
+                invalid_anak3 = new DeliveryOrderDetail()
                 {
                     ItemId = item.Id,
-                    SalesOrderId = valid_induk1.Id,
+                    SalesOrderDetailId = valid_sanak1.Id,
+                    DeliveryOrderId = valid_induk1.Id,
                 };
 
-                _salesOrderDetailService.CreateObject(invalid_anak1, _salesOrderService, _itemService);
-                _salesOrderDetailService.CreateObject(invalid_anak2, _salesOrderService, _itemService);
-                _salesOrderDetailService.CreateObject(invalid_anak3, _salesOrderService, _itemService);
+                invalid_anak4 = new DeliveryOrderDetail()
+                {
+                    ItemId = item.Id,
+                    DeliveryOrderId = valid_induk1.Id,
+                    Quantity = jumlah1
+                };
 
-                _salesOrderDetailService.CreateObject(valid_anak1, _salesOrderService, _itemService);
-                _salesOrderDetailService.CreateObject(valid_anak1, _salesOrderService, _itemService);
+                _deliveryOrderDetailService.CreateObject(invalid_anak1, _itemService, _deliveryOrderService, _salesOrderDetailService);
+                _deliveryOrderDetailService.CreateObject(invalid_anak2, _itemService, _deliveryOrderService, _salesOrderDetailService);
+                _deliveryOrderDetailService.CreateObject(invalid_anak3, _itemService, _deliveryOrderService, _salesOrderDetailService);
+                _deliveryOrderDetailService.CreateObject(invalid_anak4, _itemService, _deliveryOrderService, _salesOrderDetailService);
+
+                Console.WriteLine(invalid_anak1.Errors.FirstOrDefault());
+                Console.WriteLine(invalid_anak2.Errors.FirstOrDefault());
+                Console.WriteLine(invalid_anak3.Errors.FirstOrDefault());
+                Console.WriteLine(invalid_anak4.Errors.FirstOrDefault());
 
 
                 
